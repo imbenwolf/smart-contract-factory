@@ -7,7 +7,16 @@ import {
   Row,
   Col,
   Tag,
-  Skeleton
+  Skeleton,
+  Divider,
+  Form,
+  Input,
+  Select,
+  Button,
+  message,
+  notification,
+  Collapse,
+  Tabs
 } from "ant-design-vue";
 
 Vue.use(Modal);
@@ -18,3 +27,13 @@ Vue.use(Row);
 Vue.use(Col);
 Vue.use(Tag);
 Vue.use(Skeleton);
+Vue.use(Divider);
+Vue.use(Form);
+Vue.use(Input);
+Vue.use(Select);
+Vue.use(Button);
+Vue.use(Collapse);
+Vue.use(Tabs);
+
+Vue.prototype.$message = message;
+Vue.prototype.$notification = notification;

@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 
+import Contracts from "@/views/Contracts.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -10,11 +12,11 @@ export default new Router({
     {
       path: "/",
       name: "contracts",
-      component: null
+      component: Contracts
     },
     {
-      path: "/proxies",
-      name: "proxies",
+      path: "/proxys",
+      name: "proxys",
       component: null
     },
     {

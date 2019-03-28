@@ -46,10 +46,10 @@
             <span>Contracts</span>
           </router-link>
         </a-menu-item>
-        <a-menu-item key="proxies">
-          <router-link :to="{ name: 'proxies' }">
+        <a-menu-item key="proxys">
+          <router-link :to="{ name: 'proxys' }">
             <a-icon type="fork" />
-            <span>Proxies</span>
+            <span>Proxys</span>
           </router-link>
         </a-menu-item>
         <a-sub-menu key="create">
