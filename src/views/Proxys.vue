@@ -28,86 +28,86 @@
                     }}</a-col>
                   </a-row>
                 </template>
-                <div>
-                  <p :style="{ margin: 0 }">Proxy contract for:</p>
-                  <h2 :style="{ 'margin-bottom': '25px' }">
-                    {{ proxy.name }}
-                  </h2>
-                  <a-divider />
-                  <a-row>
-                    <a-col :span="12">Your implementation address:</a-col>
-                    <a-col :span="12">{{ proxy.implementation }}</a-col>
-                  </a-row>
-                  <a-row>
-                    <a-col :span="12">Supported implementation address:</a-col>
-                    <a-col :span="12">
-                      {{ getSupportedImplementationAddressByName(proxy.name) }}
-                    </a-col>
-                  </a-row>
 
-                  <a-row :style="{ textAlign: 'center', marginTop: '16px' }">
-                    <a-icon
-                      v-if="
-                        getSupportedImplementationAddressByName(proxy.name) ===
-                          proxy.address
-                      "
-                      type="check-circle"
-                      theme="twoTone"
-                      twoToneColor="#52c41a"
-                    />
-                    <a-icon
-                      v-else
-                      type="close-circle"
-                      theme="twoTone"
-                      twoToneColor="#eb2f96"
-                    />
-                    Implementation addresses
-                    {{
-                      getSupportedImplementationAddressByName(proxy.name) !==
-                      proxy.address
-                        ? "don't"
-                        : ""
-                    }}
-                    match
-                  </a-row>
-                  <a-divider>Upgrade Implementation</a-divider>
-                  <a-form
-                    layout="inline"
-                    style="text-align: center"
-                    :form="proxyForms[proxy.address]"
-                    @submit.prevent="handleUpgradeImplementation(proxy)"
-                  >
-                    <a-form-item label="Implementation address">
-                      <a-input
-                        v-decorator="[
-                          'implementationAddress',
-                          {
-                            rules: [
-                              {
-                                required: true,
-                                whitespace: true,
-                                message:
-                                  'Please input an implementation address'
-                              },
-                              {
-                                validator: validateEthereumAddressOrEmpty
-                              }
-                            ]
-                          }
-                        ]"
-                      >
-                      </a-input>
-                    </a-form-item>
-                    <a-form-item>
-                      <a-button type="primary" html-type="submit">
-                        Upgrade
-                      </a-button>
-                    </a-form-item>
-                  </a-form>
-                </div>
+                <p :style="{ margin: 0 }">Proxy contract for:</p>
+                <h2 :style="{ 'margin-bottom': '25px' }">
+                  {{ proxy.name }}
+                </h2>
+                <a-divider />
+
+                <a-row>
+                  <a-col :span="12">Your implementation address:</a-col>
+                  <a-col :span="12">{{ proxy.implementation }}</a-col>
+                </a-row>
+                <a-row>
+                  <a-col :span="12">Supported implementation address:</a-col>
+                  <a-col :span="12">
+                    {{ getSupportedImplementationAddressByName(proxy.name) }}
+                  </a-col>
+                </a-row>
+                <a-row :style="{ textAlign: 'center', marginTop: '16px' }">
+                  <a-icon
+                    v-if="
+                      getSupportedImplementationAddressByName(proxy.name) ===
+                        proxy.address
+                    "
+                    type="check-circle"
+                    theme="twoTone"
+                    twoToneColor="#52c41a"
+                  />
+                  <a-icon
+                    v-else
+                    type="close-circle"
+                    theme="twoTone"
+                    twoToneColor="#eb2f96"
+                  />
+                  Implementation addresses
+                  {{
+                    getSupportedImplementationAddressByName(proxy.name) !==
+                    proxy.address
+                      ? "don't"
+                      : ""
+                  }}
+                  match
+                </a-row>
+
+                <a-divider>Upgrade Implementation</a-divider>
+                <a-form
+                  layout="inline"
+                  style="text-align: center"
+                  :form="proxyForms[proxy.address]"
+                  @submit.prevent="handleUpgradeImplementation(proxy)"
+                >
+                  <a-form-item label="Implementation address">
+                    <a-input
+                      v-decorator="[
+                        'implementationAddress',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              whitespace: true,
+                              message: 'Please input an implementation address'
+                            },
+                            {
+                              validator: validateEthereumAddressOrEmpty
+                            }
+                          ]
+                        }
+                      ]"
+                    >
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" html-type="submit">
+                      Upgrade
+                    </a-button>
+                  </a-form-item>
+                </a-form>
               </a-collapse-panel>
             </a-collapse>
           </a-tab-pane>
+
           <a-tab-pane key="2">
             <span slot="tab">
               <a-icon type="file-protect" />
@@ -115,6 +115,7 @@
             </span>
             <pre class="code">{{ proxyContract.sourceCode }}</pre>
           </a-tab-pane>
+
           <a-tab-pane key="3">
             <span slot="tab">
               <a-icon type="code" />
@@ -123,6 +124,7 @@
             <pre class="code">{{ proxyContract.abi }}</pre>
           </a-tab-pane>
         </a-tabs>
+
         <a-alert
           v-else
           message='You don&#39;t have any proxys. Create one now under "Create".'
@@ -229,9 +231,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.content {
-  margin: 16px auto;
-}
-</style>

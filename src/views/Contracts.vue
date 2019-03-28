@@ -3,7 +3,7 @@
     <a-divider>Save public contract</a-divider>
     <a-form
       layout="inline"
-      style="text-align: center"
+      :style="{ textAlign: 'center', marginBottom: '42px' }"
       :form="savePublicContractForm"
       @submit.prevent="handleSavePublicContract"
     >
@@ -56,6 +56,7 @@
         </a-button>
       </a-form-item>
     </a-form>
+    <a-divider />
 
     <div class="overview">
       <a-skeleton v-if="loading" active :paragraph="{ rows: 10 }" />
@@ -69,86 +70,88 @@
               }}</a-col>
             </a-row>
           </template>
-          <div>
-            <p :style="{ margin: 0 }">Logic contract for:</p>
-            <h2 :style="{ 'margin-bottom': '25px' }">{{ contract.name }}</h2>
 
-            <a-tabs>
-              <a-tab-pane key="1">
-                <span slot="tab">
-                  <a-icon type="info" />
-                  Information
-                </span>
-                <p>
-                  Name: {{ contract.tokenName }}
-                  <br />
-                  <span v-if="contract.tokenSymbol">
-                    Symbol: {{ contract.tokenSymbol }}
-                  </span>
-                  <br />
-                  <span v-if="contract.tokenDecimals">
-                    Decimals: {{ contract.tokenDecimals }}
-                  </span>
-                </p>
+          <p :style="{ margin: 0 }">Logic contract for:</p>
+          <h2 :style="{ 'margin-bottom': '25px' }">{{ contract.name }}</h2>
 
-                <p>Total supply: {{ contract.tokenTotalSupply }}</p>
+          <a-tabs>
+            <a-tab-pane key="1">
+              <span slot="tab">
+                <a-icon type="info" />
+                Information
+              </span>
 
-                <a-divider>Get balance</a-divider>
-                <a-form
-                  layout="inline"
-                  style="text-align: center"
-                  :form="contractForms[contract.address]"
-                  @submit.prevent="handleGetBalance(contract)"
-                >
-                  <a-form-item label="Address">
-                    <a-input
-                      v-decorator="[
-                        'address',
-                        {
-                          rules: [
-                            {
-                              required: true,
-                              whitespace: true,
-                              message: 'Please input an address'
-                            },
-                            {
-                              validator: validateEthereumAddressOrEmpty
-                            }
-                          ]
-                        }
-                      ]"
-                    >
-                    </a-input>
-                  </a-form-item>
-                  <a-form-item>
-                    <a-button type="primary" html-type="submit">
-                      Get balance
-                    </a-button>
-                  </a-form-item>
-                </a-form>
-              </a-tab-pane>
-              <a-tab-pane key="2">
-                <span slot="tab">
-                  <a-icon type="file-protect" />
-                  Source code
+              <p>
+                Name: {{ contract.tokenName }}
+                <br />
+                <span v-if="contract.tokenSymbol">
+                  Symbol: {{ contract.tokenSymbol }}
                 </span>
-                <pre class="code">{{
-                  getContractWithName(contract.name).sourceCode
-                }}</pre>
-              </a-tab-pane>
-              <a-tab-pane key="3">
-                <span slot="tab">
-                  <a-icon type="code" />
-                  ABI
+                <br />
+                <span v-if="contract.tokenDecimals">
+                  Decimals: {{ contract.tokenDecimals }}
                 </span>
-                <pre class="code">{{
-                  getContractWithName(contract.name).abi
-                }}</pre>
-              </a-tab-pane>
-            </a-tabs>
-          </div>
+              </p>
+              <p>Total supply: {{ contract.tokenTotalSupply }}</p>
+
+              <a-divider>Get balance</a-divider>
+              <a-form
+                layout="inline"
+                style="text-align: center"
+                :form="contractForms[contract.address]"
+                @submit.prevent="handleGetBalance(contract)"
+              >
+                <a-form-item label="Address">
+                  <a-input
+                    v-decorator="[
+                      'address',
+                      {
+                        rules: [
+                          {
+                            required: true,
+                            whitespace: true,
+                            message: 'Please input an address'
+                          },
+                          {
+                            validator: validateEthereumAddressOrEmpty
+                          }
+                        ]
+                      }
+                    ]"
+                  >
+                  </a-input>
+                </a-form-item>
+                <a-form-item>
+                  <a-button type="primary" html-type="submit">
+                    Get balance
+                  </a-button>
+                </a-form-item>
+              </a-form>
+            </a-tab-pane>
+
+            <a-tab-pane key="2">
+              <span slot="tab">
+                <a-icon type="file-protect" />
+                Source code
+              </span>
+              <pre class="code">{{
+                getContractWithName(contract.name).sourceCode
+              }}</pre>
+            </a-tab-pane>
+
+            <a-tab-pane key="3">
+              <span slot="tab">
+                <a-icon type="code" />
+                ABI
+              </span>
+              <pre class="code">{{
+                getContractWithName(contract.name).abi
+              }}</pre>
+            </a-tab-pane>
+          </a-tabs>
         </a-collapse-panel>
       </a-collapse>
+
       <a-alert
         v-else
         message="You don't have any saved contracts. Save one now with the form above"
@@ -287,9 +290,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.overview {
-  margin-top: 48px;
-}
-</style>

@@ -235,6 +235,10 @@ export default {
   padding: 24px;
 }
 
+.ant-alert + .content {
+  margin: 16px auto;
+}
+
 .overview {
   width: 90%;
   margin: 16px auto;
