@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Contracts from "@/views/Contracts.vue";
+import Proxys from "@/views/Proxys.vue";
 
 Vue.use(Router);
 
@@ -17,7 +18,7 @@ export default new Router({
     {
       path: "/proxys",
       name: "proxys",
-      component: null
+      component: Proxys
     },
     {
       path: "/create",
