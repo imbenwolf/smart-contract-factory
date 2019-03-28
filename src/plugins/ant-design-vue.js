@@ -17,7 +17,10 @@ import {
   notification,
   Collapse,
   Tabs,
-  Alert
+  Alert,
+  Tooltip,
+  InputNumber,
+  Radio
 } from "ant-design-vue";
 
 Vue.use(Modal);
@@ -36,6 +39,9 @@ Vue.use(Button);
 Vue.use(Collapse);
 Vue.use(Tabs);
 Vue.use(Alert);
+Vue.use(Tooltip);
+Vue.use(InputNumber);
+Vue.use(Radio);
 
 Vue.prototype.$message = message;
 Vue.prototype.$notification = notification;
