@@ -57,7 +57,7 @@
       </a-form-item>
     </a-form>
 
-    <div class="contracts-overview">
+    <div class="overview">
       <a-skeleton v-if="loading" active :paragraph="{ rows: 10 }" />
       <a-collapse v-else-if="contracts.length > 0" :bordered="false">
         <a-collapse-panel v-for="contract in contracts" :key="contract.address">
@@ -162,55 +162,55 @@
 <script>
 export default {
   name: "Contracts",
-  components: {},
-  data: () => ({
-    loading: true,
-    contractForms: [],
-    contractsWithInformation: [],
-    supportedContracts: [
-      {
-        name: "ERC20",
-        implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-      },
-      {
-        name: "ERC721",
-        implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-      }
-    ],
-    contracts: [
-      {
-        name: "ERC20",
-        address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975041",
-        tokenName: "MockedCoin",
-        tokenSymbol: "MKC",
-        tokenDecimals: 5,
-        tokenTotalSupply: 123
-      },
-      {
-        name: "ERC20",
-        address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975042",
-        tokenName: "MockedCoin",
-        tokenSymbol: "MKC",
-        tokenDecimals: 5,
-        tokenTotalSupply: 123
-      },
-      {
-        name: "ERC721",
-        address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043",
-        tokenName: "MockedCoin",
-        tokenSymbol: "MKC",
-        tokenTotalSupply: 123
-      },
-      {
-        name: "ERC20",
-        address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975044",
-        tokenName: "MockedCoin",
-        tokenSymbol: "MKC",
-        tokenDecimals: 5,
-        tokenTotalSupply: 123
-      }
-    ]
-  }),
+  data() {
+    return {
+      loading: true,
+      contractForms: [],
+      supportedContracts: [
+        {
+          name: "ERC20",
+          implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
+        },
+        {
+          name: "ERC721",
+          implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
+        }
+      ],
+      contracts: [
+        {
+          name: "ERC20",
+          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975041",
+          tokenName: "MockedCoin",
+          tokenSymbol: "MKC",
+          tokenDecimals: 5,
+          tokenTotalSupply: 123
+        },
+        {
+          name: "ERC20",
+          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975042",
+          tokenName: "MockedCoin",
+          tokenSymbol: "MKC",
+          tokenDecimals: 5,
+          tokenTotalSupply: 123
+        },
+        {
+          name: "ERC721",
+          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043",
+          tokenName: "MockedCoin",
+          tokenSymbol: "MKC",
+          tokenTotalSupply: 123
+        },
+        {
+          name: "ERC20",
+          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975044",
+          tokenName: "MockedCoin",
+          tokenSymbol: "MKC",
+          tokenDecimals: 5,
+          tokenTotalSupply: 123
+        }
+      ]
+    };
+  },
   methods: {
     validateEthereumAddressOrEmpty(rule, value, callback) {
       if (
@@ -288,15 +288,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.contracts-overview {
-  width: 90%;
-  margin: 48px auto 16px auto;
-
-  .code {
-    background-color: #002b36;
-    color: #839597;
-    padding: 16px;
-  }
+<style scoped>
+.overview {
+  margin-top: 48px;
 }
 </style>

@@ -91,14 +91,13 @@
       </a-layout-header>
 
       <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
-        <transition
-          v-if="isNetworkSupported"
-          name="component-fade"
-          mode="out-in"
-        >
-          <router-view v-if="ethereumAddress" />
+        <transition name="component-fade" mode="out-in">
+          <router-view v-if="isNetworkSupported && ethereumAddress" />
           <div v-else class="content">
-            <a-skeleton active :paragraph="{ rows: 10 }" />
+            <a-skeleton
+              :active="isNetworkSupported"
+              :paragraph="{ rows: 10 }"
+            />
           </div>
         </transition>
       </a-layout-content>
@@ -220,12 +219,7 @@ export default {
 }
 </style>
 
-<style>
-.content {
-  background: white;
-  padding: 24px;
-}
-
+<style lang="scss">
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.2s ease;
@@ -234,5 +228,21 @@ export default {
 .slide-fade-leave-to {
   transform: translateX(10px);
   opacity: 0;
+}
+
+.content {
+  background: white;
+  padding: 24px;
+}
+
+.overview {
+  width: 90%;
+  margin: 16px auto;
+
+  .code {
+    background-color: #002b36;
+    color: #839597;
+    padding: 16px;
+  }
 }
 </style>
