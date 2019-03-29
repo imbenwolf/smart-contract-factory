@@ -19,3 +19,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Truffle
+build
+
+# ZeppelinOS
+.zos.session
+zos.dev-*.json
