@@ -12,7 +12,7 @@
       <create-token-form
         ref="createTokenForm"
         :tokenStandard="tokenStandard"
-        @create-token="handleCreateToken"
+        @create-token="createERC20SmartContract"
       />
     </div>
   </div>
@@ -39,24 +39,21 @@ export default {
         "Creating ERC20 contract, please confirm transaction on Metamask",
         0
       );
-      setTimeout(message, 0);
-      this.$notification.success({
-        message: "ERC20 created!",
-        description:
-          "Your ERC20 token has been created, the transaction hash is: XY",
-        duration: 0,
-        style: {
-          width: "600px",
-          marginLeft: "-220px",
-          marginTop: "25px"
-        }
-      });
-      this.$refs.createTokenForm.form.resetFields();
-    },
-    handleCreateToken({ tokenStandard, data }) {
-      if (tokenStandard === this.tokenStandard) {
-        this.createERC20SmartContract(data);
-      }
+      setTimeout(() => {
+        setTimeout(message, 0);
+        this.$notification.success({
+          message: "ERC20 created!",
+          description:
+            "Your ERC20 token has been created, the transaction hash is: XY",
+          duration: 0,
+          style: {
+            width: "600px",
+            marginLeft: "-220px",
+            marginTop: "25px"
+          }
+        });
+        this.$refs.createTokenForm.form.resetFields();
+      }, 1000);
     }
   }
 };

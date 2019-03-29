@@ -201,7 +201,7 @@
       </a-form-item>
     </transition-group>
     <a-form-item v-bind="tailFormItemLayout">
-      <a-button type="dashed" style="width: 100%" @click="addMinterField()">
+      <a-button type="dashed" style="width: 100%" @click="addMinterField">
         <a-icon type="plus" /> Add minter
       </a-button>
     </a-form-item>
@@ -256,7 +256,7 @@
       </a-form-item>
     </transition-group>
     <a-form-item v-bind="tailFormItemLayout">
-      <a-button type="dashed" style="width: 100%" @click="addPauserField()">
+      <a-button type="dashed" style="width: 100%" @click="addPauserField">
         <a-icon type="plus" /> Add pauser
       </a-button>
     </a-form-item>
@@ -301,22 +301,10 @@ export default {
       },
       tailFormItemLayout: {
         wrapperCol: {
-          sm: {
-            span: 24,
-            offset: 0
-          },
-          md: {
-            span: 16,
-            offset: 6
-          },
-          lg: {
-            span: 10,
-            offset: 9
-          },
-          xl: {
-            span: 6,
-            offset: 9
-          }
+          sm: { span: 24, offset: 0 },
+          md: { span: 16, offset: 6 },
+          lg: { span: 10, offset: 9 },
+          xl: { span: 6, offset: 9 }
         }
       }
     };
@@ -432,10 +420,7 @@ export default {
             result.initialHolderOfTokens = values.initialHolderOfTokens;
           }
 
-          this.$emit("create-token", {
-            tokenStandard: this.tokenStandard,
-            data: result
-          });
+          this.$emit("create-token", result);
         }
       });
     }
