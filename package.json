@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "ethereum": "yarn ganache-cli",
-    "migrate": "yarn truffle migrate",
+    "migrate": "yarn lint:solidity && yarn truffle migrate",
     "lint:vue": "vue-cli-service lint",
     "lint:solidity": "solhint contracts/**/*.sol"
   },
@@ -48,6 +48,10 @@
   "lint-staged": {
     "*.{js,vue}": [
       "vue-cli-service lint",
+      "git add"
+    ],
+    "*.sol": [
+      "solhint",
       "git add"
     ]
   }
