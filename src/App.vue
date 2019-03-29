@@ -1,5 +1,6 @@
 <template>
   <a-layout id="app" style="min-height: 100vh">
+    <metamask v-if="isNetworkSupported" />
     <a-modal
       :closable="false"
       :footer="null"
@@ -75,7 +76,7 @@
     >
       <a-layout-header style="background: #fff; padding: 0">
         <a-row
-          v-if="ethereumAddress"
+          v-if="ethereumAccountAddress"
           type="flex"
           justify="end"
           :style="{ 'margin-right': '10px' }"
@@ -84,7 +85,7 @@
             <span :style="{ marginRight: '16px' }">Logged in:</span>
             <a-tag :style="{ cursor: 'default' }" color="#001529">
               <a-icon type="wallet" :style="{ 'margin-right': '5px' }" />
-              {{ ethereumAddress }}
+              {{ ethereumAccountAddress }}
             </a-tag>
           </a-col>
         </a-row>
@@ -92,7 +93,7 @@
 
       <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
         <transition name="component-fade" mode="out-in">
-          <keep-alive v-if="isNetworkSupported && ethereumAddress">
+          <keep-alive v-if="isNetworkSupported && ethereumAccountAddress">
             <router-view />
           </keep-alive>
           <div v-else class="content">
@@ -112,17 +113,22 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
+import Metamask from "@/components/Metamask.vue";
+
 export default {
   name: "App",
+  components: { Metamask },
   data() {
     return {
       collapsed: false,
       isNetworkSupported: true,
-      selectedKeys: [this.$route.name],
-      ethereumAddress: ""
+      selectedKeys: [this.$route.name]
     };
   },
   computed: {
+    ...mapGetters(["ethereumAccountAddress"]),
     year() {
       return new Date().getFullYear();
     }
@@ -131,11 +137,6 @@ export default {
     $route(to) {
       this.selectedKeys = [to.name];
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.ethereumAddress = "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043";
-    }, 1000);
   }
 };
 </script>

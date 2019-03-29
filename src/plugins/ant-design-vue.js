@@ -20,7 +20,8 @@ import {
   Alert,
   Tooltip,
   InputNumber,
-  Radio
+  Radio,
+  Drawer
 } from "ant-design-vue";
 
 Vue.use(Modal);
@@ -42,6 +43,7 @@ Vue.use(Alert);
 Vue.use(Tooltip);
 Vue.use(InputNumber);
 Vue.use(Radio);
+Vue.use(Drawer);
 
 Vue.prototype.$message = message;
 Vue.prototype.$notification = notification;
