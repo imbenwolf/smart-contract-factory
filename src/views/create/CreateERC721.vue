@@ -2,9 +2,10 @@
   <div>
     <a-alert :message="tokenStandard" type="info" showIcon>
       <p slot="description">
-        {{ tokenStandard }} is the Ethereum standard for fungible tokens.
-        Fungibility means each token is replaceable by an identical token.<br />ERC20
-        is the most used token contract and known for it's use in ICOs.
+        {{ tokenStandard }} is the Ethereum standard for non-fungible tokens.
+        Non-Fungibility means each token is unique and unreplaceable by another
+        token.<br />ERC721 is known for it's use as a collectible (e.g
+        Cryptokitties).
       </p>
     </a-alert>
 
@@ -22,28 +23,28 @@
 import CreateTokenForm from "@/components/CreateTokenForm.vue";
 
 export default {
-  name: "ERC20",
+  name: "ERC721",
   data() {
     return {
-      tokenStandard: "ERC20"
+      tokenStandard: "ERC721"
     };
   },
   components: {
     CreateTokenForm
   },
   methods: {
-    async createERC20SmartContract(data) {
+    async createERC721SmartContract(data) {
       console.log(data);
 
       let message = this.$message.loading(
-        "Creating ERC20 contract, please confirm transaction on Metamask",
+        "Creating ERC721 contract, please confirm transaction on Metamask",
         0
       );
       setTimeout(message, 0);
       this.$notification.success({
-        message: "ERC20 created!",
+        message: "ERC721 created!",
         description:
-          "Your ERC20 token has been created, the transaction hash is: XY",
+          "Your ERC721 token has been created, the transaction hash is: XY",
         duration: 0,
         style: {
           width: "600px",
@@ -55,7 +56,7 @@ export default {
     },
     handleCreateToken({ tokenStandard, data }) {
       if (tokenStandard === this.tokenStandard) {
-        this.createERC20SmartContract(data);
+        this.createERC721SmartContract(data);
       }
     }
   }

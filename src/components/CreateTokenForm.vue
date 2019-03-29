@@ -48,7 +48,7 @@
         ]"
       />
     </a-form-item>
-    <a-form-item v-bind="formItemLayout">
+    <a-form-item v-bind="formItemLayout" v-if="tokenStandard === 'ERC20'">
       <span slot="label">
         Decimals
         <a-tooltip
@@ -75,7 +75,11 @@
         ]"
       />
     </a-form-item>
-    <a-form-item :style="{ 'text-align': 'center' }" v-bind="formItemLayout">
+    <a-form-item
+      :style="{ 'text-align': 'center' }"
+      v-bind="formItemLayout"
+      v-if="tokenStandard === 'ERC20'"
+    >
       <span slot="label">
         Initial tokens
         <a-tooltip
@@ -265,13 +269,20 @@
 </template>
 
 <script>
-import bus from "@/event-bus.js";
+const tokenStandards = ["ERC20", "ERC721"];
 
 let minterId = 0;
 let pauserId = 0;
 
 export default {
   name: "CreateTokenForm",
+  props: {
+    tokenStandard: {
+      type: String,
+      required: true,
+      validator: tokenStandard => tokenStandards.includes(tokenStandard)
+    }
+  },
   data() {
     return {
       formItemLayout: {
@@ -421,7 +432,10 @@ export default {
             result.initialHolderOfTokens = values.initialHolderOfTokens;
           }
 
-          bus.$emit("create", result);
+          this.$emit("create-token", {
+            tokenStandard: this.tokenStandard,
+            data: result
+          });
         }
       });
     }

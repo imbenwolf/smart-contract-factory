@@ -5,6 +5,7 @@ import Contracts from "@/views/Contracts.vue";
 import Proxys from "@/views/Proxys.vue";
 
 import CreateERC20 from "@/views/create/CreateERC20.vue";
+import CreateERC721 from "@/views/create/CreateERC721.vue";
 
 Vue.use(Router);
 
@@ -37,7 +38,7 @@ export default new Router({
       {
         path: "/erc721",
         name: "erc721",
-        component: null
+        component: CreateERC721
       }
     ]),
     {

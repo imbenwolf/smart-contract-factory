@@ -92,7 +92,9 @@
 
       <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
         <transition name="component-fade" mode="out-in">
-          <router-view v-if="isNetworkSupported && ethereumAddress" />
+          <keep-alive v-if="isNetworkSupported && ethereumAddress">
+            <router-view />
+          </keep-alive>
           <div v-else class="content">
             <a-skeleton
               :active="isNetworkSupported"
