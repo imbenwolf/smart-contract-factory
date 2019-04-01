@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "ethereum": "yarn ganache-cli",
+    "ethereum": "rm -f zos.dev-80085.json && yarn ganache-cli -i 80085",
     "migrate": "yarn lint:solidity && yarn truffle migrate",
     "lint:vue": "vue-cli-service lint",
     "lint:solidity": "prettier --write **/*.sol"

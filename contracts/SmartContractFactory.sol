@@ -66,6 +66,19 @@ contract SmartContractFactory is Initializable {
         contracts.push(newContract);
     }
 
+    function getNumberOfContracts() public view returns (uint) {
+        address owner = msg.sender;
+        Contract[] storage contracts = userContracts[owner];
+        return contracts.length;
+    }
+
+    function getContract(uint key) public view returns (address, string, bool) {
+        address owner = msg.sender;
+        Contract[] storage contracts = userContracts[owner];
+        Contract storage contractByKey = contracts[key];
+        return (contractByKey.contractAddress, contractByKey.contractName, contractByKey.isContractAdmin);
+    }
+
     function isContractSupported(string contractName)
         private
         pure
