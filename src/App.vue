@@ -105,9 +105,10 @@
         </transition>
       </a-layout-content>
 
-      <a-layout-footer style="text-align: center">
-        Swisscom Blockchain ©{{ year }} Created by Benjamin Wolf
-      </a-layout-footer>
+      <a-layout-footer style="text-align: center"
+        >Swisscom Blockchain ©{{ year }} Created by Benjamin
+        Wolf</a-layout-footer
+      >
     </a-layout>
   </a-layout>
 </template>
@@ -116,6 +117,7 @@
 import { mapGetters } from "vuex";
 
 import Metamask from "@/components/Metamask.vue";
+import SmartContractFactory from "../contracts/SmartContractFactory.sol";
 
 export default {
   name: "App",
@@ -137,6 +139,9 @@ export default {
     $route(to) {
       this.selectedKeys = [to.name];
     }
+  },
+  mounted() {
+    console.log(SmartContractFactory);
   }
 };
 </script>
