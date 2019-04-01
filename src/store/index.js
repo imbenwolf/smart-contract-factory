@@ -1,7 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import Metamask from "@/metamask.js";
+import Metamask from "@/store/metamask.js";
+import contractFactory from "@/api/contractFactory.js";
 
 Vue.use(Vuex);
 
@@ -15,7 +16,9 @@ export default new Vuex.Store({
   getters: {
     isMetamaskInstalled: state => state.isMetamaskInstalled,
     isAskingForMetamaskAccess: state => state.isAskingForMetamaskAccess,
-    ethereumAccountAddress: state => state.ethereumAccountAddress
+    ethereumAccountAddress: state => state.ethereumAccountAddress,
+    isNetworkSupported: state =>
+      contractFactory.hasNetwork(state.ethereumNetworkId)
   },
   mutations: {
     setIsMetamaskInstalled: (state, isInstalled) =>
@@ -28,7 +31,15 @@ export default new Vuex.Store({
   },
   actions: {
     requestMetamaskAccess: ({ commit }) =>
-      commit("setIsAskingForMetamaskAccess", true)
+      commit("setIsAskingForMetamaskAccess", true),
+    fetchAllSupportedContracts: async ({ state }) => {
+      console.log(
+        await contractFactory.getImplementationAddressOfContract(
+          "StandaloneERC721",
+          state.ethereumAccountAddress
+        )
+      );
+    }
   },
   plugins: [Metamask.create]
 });

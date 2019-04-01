@@ -18,6 +18,7 @@ const Metamask = {
   },
   listenForNetworkChange: store => {
     window.ethereum.autoRefreshOnNetworkChange = false;
+    store.commit("setEthereumNetworkId", window.ethereum.networkVersion);
     window.ethereum.on("networkChanged", networkId => {
       store.commit("setEthereumNetworkId", networkId);
     });

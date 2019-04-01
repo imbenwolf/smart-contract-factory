@@ -40,7 +40,12 @@
         </a>
       </div>
 
-      <a-menu theme="dark" :selectedKeys="selectedKeys" mode="inline">
+      <a-menu
+        theme="dark"
+        :selectedKeys="selectedKeys"
+        :defaultOpenKeys="['create']"
+        mode="inline"
+      >
         <a-menu-item key="contracts">
           <router-link :to="{ name: 'contracts' }">
             <a-icon type="dashboard" />
@@ -105,19 +110,17 @@
         </transition>
       </a-layout-content>
 
-      <a-layout-footer style="text-align: center"
-        >Swisscom Blockchain ©{{ year }} Created by Benjamin
-        Wolf</a-layout-footer
-      >
+      <a-layout-footer style="text-align: center">
+        Swisscom Blockchain ©{{ year }} Created by Benjamin Wolf
+      </a-layout-footer>
     </a-layout>
   </a-layout>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import Metamask from "@/components/Metamask.vue";
-import SmartContractFactory from "../contracts/SmartContractFactory.sol";
 
 export default {
   name: "App",
@@ -125,12 +128,11 @@ export default {
   data() {
     return {
       collapsed: false,
-      isNetworkSupported: true,
       selectedKeys: [this.$route.name]
     };
   },
   computed: {
-    ...mapGetters(["ethereumAccountAddress"]),
+    ...mapGetters(["ethereumAccountAddress", "isNetworkSupported"]),
     year() {
       return new Date().getFullYear();
     }
@@ -140,8 +142,11 @@ export default {
       this.selectedKeys = [to.name];
     }
   },
-  mounted() {
-    console.log(SmartContractFactory);
+  methods: {
+    ...mapActions(["fetchAllSupportedContracts"])
+  },
+  async mounted() {
+    await this.fetchAllSupportedContracts();
   }
 };
 </script>
@@ -190,19 +195,13 @@ export default {
       top: 0;
     }
 
-    @-webkit-keyframes initialAnimation {
-      100% {
-        background-position: -3600px;
-      }
-    }
-
     @keyframes initialAnimation {
       100% {
         background-position: -3600px;
       }
     }
 
-    @-webkit-keyframes repeatingAnimation {
+    @keyframes repeatingAnimation {
       0% {
         background-position: 0;
       }
