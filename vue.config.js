@@ -4,7 +4,7 @@ module.exports = {
     config.module
       .rule("solidity")
       .test(/\.sol/)
-      .use()
+      .use("json-loader")
       .loader("json-loader")
       .end()
       .use("truffle-solidity-loader")

@@ -44,6 +44,9 @@
     "zos": "^2.2.2",
     "zos-lib": "^2.2.2"
   },
+  "resolutions": {
+    "truffle-solidity-loader/truffle-core": "5.0.8"
+  },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
