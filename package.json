@@ -30,6 +30,7 @@
     "less": "^2.7.3",
     "less-loader": "^4.1.0",
     "lint-staged": "^8.1.4",
+    "openzeppelin-eth": "2.0.2",
     "prettier-plugin-solidity": "^1.0.0-alpha.21",
     "sass": "^1.17.2",
     "sass-loader": "^7.1.0",

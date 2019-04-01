@@ -1,8 +1,14 @@
 const shell = require("shelljs");
 
-function addContract(contractName, networkName, accounts) {
+function addContract(contractName, accounts) {
+  return shell.exec(`yarn zos add ${contractName} --from ${accounts[0]}`);
+}
+
+function pushContract(networkName, accounts, isDevelopment) {
   return shell.exec(
-    `yarn zos add ${contractName} --push ${networkName} --from ${accounts[0]}`
+    `yarn zos push --skip-compile --network ${networkName} --from ${
+      accounts[0]
+    } ${isDevelopment ? "--force --deploy-dependencies" : ""}`
   );
 }
 
@@ -24,6 +30,7 @@ function createContract(contractName, networkName, accounts, args) {
 
 module.exports = {
   addContract,
+  pushContract,
   updateContract,
   createContract
 };

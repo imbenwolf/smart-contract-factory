@@ -1,8 +1,8 @@
-const migrationsHelper = require("./migrations-helper");
+const zeppelinosHelper = require("./zeppelinos-helper");
 const CONTRACT_NAME = "SmartContractFactory";
 
 function addSmartContractFactory(networkName, accounts) {
-  let addContract = migrationsHelper.addContract(
+  let addContract = zeppelinosHelper.addContract(
     CONTRACT_NAME,
     networkName,
     accounts
@@ -10,18 +10,33 @@ function addSmartContractFactory(networkName, accounts) {
   if (addContract.code !== 0) throw new Error("Migration failed");
 }
 
-function createSmartContractFactory(networkName, accounts, args) {
-  let create = migrationsHelper.createContract(
+function pushSmartContractFactory(networkName, accounts) {
+  const isDevelopment = networkName === "development";
+
+  let push = zeppelinosHelper.pushContract(
+    networkName,
+    accounts,
+    isDevelopment
+  );
+  if (push.code !== 0) throw new Error("Migration failed");
+}
+
+function createSmartContractFactory(networkName, accounts) {
+  let zosDataIdentifier = networkName;
+  if (networkName === "development") zosDataIdentifier = "dev-80085"; // Pre-defined networkId 80085
+  const appAddress = require(`../zos.${zosDataIdentifier}.json`).app.address;
+
+  let create = zeppelinosHelper.createContract(
     CONTRACT_NAME,
     networkName,
     accounts,
-    [args]
+    [appAddress]
   );
   if (create.code !== 0) throw new Error("Migration failed");
 }
 
 function deploySmartContractFactory(networkName, accounts) {
-  let update = migrationsHelper.updateContract(
+  let update = zeppelinosHelper.updateContract(
     CONTRACT_NAME,
     networkName,
     accounts
@@ -33,7 +48,7 @@ function deploySmartContractFactory(networkName, accounts) {
       "were found"
     )
   ) {
-    createSmartContractFactory(networkName, accounts, "okok");
+    createSmartContractFactory(networkName, accounts);
   } else if (update.code !== 0) {
     throw new Error("Migration failed");
   }
@@ -42,6 +57,7 @@ function deploySmartContractFactory(networkName, accounts) {
 module.exports = function(deployer, networkName, accounts) {
   deployer.then(() => {
     addSmartContractFactory(networkName, accounts);
+    pushSmartContractFactory(networkName, accounts);
     deploySmartContractFactory(networkName, accounts);
   });
 };

@@ -2,7 +2,11 @@
   "zosversion": "2.2",
   "name": "smart-contract-factory",
   "version": "0.1.0",
+  "publish": true,
   "contracts": {
     "SmartContractFactory": "SmartContractFactory"
+  },
+  "dependencies": {
+    "openzeppelin-eth": "^2.0.2"
   }
 }
