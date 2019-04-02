@@ -32,14 +32,12 @@ export default new Vuex.Store({
   actions: {
     requestMetamaskAccess: ({ commit }) =>
       commit("setIsAskingForMetamaskAccess", true),
-    fetchAllSupportedContracts: async ({ state }) => {
-      console.log(
-        await contractFactory.getImplementationAddressOfContract(
-          "StandaloneERC721",
-          state.ethereumAccountAddress
-        )
-      );
-    }
+    createSmartContract: async (context, { contractName, data }) =>
+      await contractFactory.createSmartContract(contractName, data),
+    fetchAllSupportedContracts: async () =>
+      await contractFactory.getImplementationAddressOfContract(
+        "StandaloneERC721"
+      )
   },
   plugins: [Metamask.create]
 });
