@@ -4,6 +4,8 @@ import encodeCall from "zos-lib/lib/helpers/encodeCall";
 
 import SmartContractFactory from "@/../contracts/SmartContractFactory.sol";
 
+const supportedContracts = ["StandaloneERC20", "StandaloneERC721"];
+
 const Factory = {
   async getInstance() {
     const smartContractFactory = Contract(SmartContractFactory);
@@ -90,15 +92,22 @@ const Factory = {
     }
     return contracts;
   },
-  async getImplementationAddressOfContract(contractName) {
+  async getAllSupportedImplementations() {
     const factory = await Factory.getInstance();
-    const implementationAddress = await factory.getImplementation(
-      contractName,
-      {
-        from: window.ethereum.selectedAddress
-      }
-    );
-    return implementationAddress;
+    let supportedImplementations = [];
+    for (let supportedContract of supportedContracts) {
+      const implementationAddress = await factory.getImplementation(
+        supportedContract,
+        {
+          from: window.ethereum.selectedAddress
+        }
+      );
+      supportedImplementations.push({
+        name: supportedContract,
+        implementation: implementationAddress
+      });
+    }
+    return supportedImplementations;
   }
 };
 

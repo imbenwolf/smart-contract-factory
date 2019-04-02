@@ -2,7 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import Metamask from "@/store/metamask.js";
-import contractFactory from "@/api/contractFactory.js";
+import contractFactory from "@/api/factoryContract.js";
+import contractProxy from "@/api/proxyContract.js";
 
 Vue.use(Vuex);
 
@@ -12,15 +13,22 @@ export default new Vuex.Store({
     isAskingForMetamaskAccess: false,
     ethereumAccountAddress: null,
     ethereumNetworkId: null,
+    loadingAllContracts: false,
+    allContracts: [],
+    loadingProxys: false,
     proxys: [],
-    contracts: []
+    supportedImplementations: []
   },
   getters: {
     isMetamaskInstalled: state => state.isMetamaskInstalled,
     isAskingForMetamaskAccess: state => state.isAskingForMetamaskAccess,
     ethereumAccountAddress: state => state.ethereumAccountAddress,
     isNetworkSupported: state =>
-      contractFactory.hasNetwork(state.ethereumNetworkId)
+      contractFactory.hasNetwork(state.ethereumNetworkId),
+    loadingAllContracts: state => state.loadingAllContracts,
+    loadingProxys: state => state.loadingProxys,
+    proxys: state => state.proxys,
+    supportedImplementations: state => state.supportedImplementations
   },
   mutations: {
     setIsMetamaskInstalled: (state, isInstalled) =>
@@ -30,8 +38,14 @@ export default new Vuex.Store({
     setEthereumAccountAddress: (state, address) =>
       (state.ethereumAccountAddress = address),
     setEthereumNetworkId: (state, id) => (state.ethereumNetworkId = id),
+    setLoadingAllContracts: (state, isLoading) =>
+      (state.loadingAllContracts = isLoading),
+    setAllContracts: (state, newContracts) =>
+      (state.allContracts = newContracts),
+    setLoadingProxys: (state, isLoading) => (state.loadingProxys = isLoading),
     setProxys: (state, newProxys) => (state.proxys = newProxys),
-    setContracts: (state, newContracts) => (state.contracts = newContracts)
+    setSupportedImplementions: (state, newSupportedImplementations) =>
+      (state.supportedImplementations = newSupportedImplementations)
   },
   actions: {
     requestMetamaskAccess: ({ commit }) =>
@@ -39,30 +53,32 @@ export default new Vuex.Store({
     createSmartContract: async (context, { contractName, data }) =>
       await contractFactory.createSmartContract(contractName, data),
     fetchAllContracts: async ({ commit }) => {
+      commit("setLoadingAllContracts", true);
       const contracts = await contractFactory.getAllContracts();
-      commit(
-        "setProxys",
-        contracts
-          .filter(contract => contract.isAdmin)
-          .map(contract => ({
-            address: contract.address,
-            name: contract.name
-          }))
-      );
-      commit(
-        "setContracts",
-        contracts
-          .filter(contract => !contract.isAdmin)
-          .map(contract => ({
-            address: contract.address,
-            name: contract.name
-          }))
-      );
+      commit("setAllContracts", contracts);
+      commit("setLoadingAllContracts", false);
     },
-    fetchAllSupportedContracts: async () =>
-      await contractFactory.getImplementationAddressOfContract(
-        "StandaloneERC721"
-      )
+    fetchProxys: async ({ state, commit }) => {
+      commit("setLoadingProxys", true);
+      let proxys = state.allContracts
+        .filter(contract => contract.isAdmin)
+        .map(contract => ({
+          address: contract.address,
+          name: contract.name
+        }));
+      for (let proxy of proxys) {
+        const implementationAddress = await contractProxy.getImplementationAddress(
+          proxy.address
+        );
+        proxy.implementation = implementationAddress;
+      }
+      commit("setProxys", proxys);
+      commit("setLoadingProxys", false);
+    },
+    fetchAllSupportedContracts: async ({ commit }) => {
+      const supportedImplementations = await contractFactory.getAllSupportedImplementations();
+      commit("setSupportedImplementions", supportedImplementations);
+    }
   },
   plugins: [Metamask.create]
 });

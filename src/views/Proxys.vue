@@ -10,7 +10,11 @@
 
     <div class="content">
       <div class="overview">
-        <a-skeleton v-if="loading" active :paragraph="{ rows: 10 }" />
+        <a-skeleton
+          v-if="loadingAllContracts || loadingProxys"
+          active
+          :paragraph="{ rows: 10 }"
+        />
         <a-tabs v-else-if="proxys.length > 0">
           <a-tab-pane key="1">
             <span slot="tab">
@@ -49,7 +53,7 @@
                   <a-icon
                     v-if="
                       getSupportedImplementationAddressByName(proxy.name) ===
-                        proxy.address
+                        proxy.implementation
                     "
                     type="check-circle"
                     theme="twoTone"
@@ -64,7 +68,7 @@
                   Implementation addresses
                   {{
                     getSupportedImplementationAddressByName(proxy.name) !==
-                    proxy.address
+                    proxy.implementation
                       ? "don't"
                       : ""
                   }}
@@ -113,7 +117,7 @@
               <a-icon type="file-protect" />
               Source code
             </span>
-            <pre class="code">{{ proxyContract.sourceCode }}</pre>
+            <pre class="code">{{ proxyContract.source }}</pre>
           </a-tab-pane>
 
           <a-tab-pane key="3">
@@ -137,49 +141,40 @@
 </template>
 
 <script>
+import AdminUpgradeabilityProxy from "@/../contracts/AdminUpgradeabilityProxy.sol";
+
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "Proxys",
   data() {
     return {
-      loading: true,
+      proxysWithInformation: [],
       proxyForms: [],
-      proxyContract: {
-        sourceCode: "code",
-        abi: "abi"
-      },
-      supportedContracts: [
-        {
-          name: "ERC20",
-          implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-        },
-        {
-          name: "ERC721",
-          implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-        }
-      ],
-      proxys: [
-        {
-          name: "ERC20",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975041",
-          implementation: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975121"
-        },
-        {
-          name: "ERC20",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975042",
-          implementation: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975122"
-        },
-        {
-          name: "ERC721",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043",
-          implementation: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-        }
-      ]
+      proxyContract: AdminUpgradeabilityProxy
     };
   },
+  computed: {
+    ...mapGetters([
+      "loadingAllContracts",
+      "loadingProxys",
+      "proxys",
+      "supportedImplementations"
+    ])
+  },
+  watch: {
+    async loadingAllContracts(isLoading) {
+      if (!isLoading) {
+        await this.fetchProxys();
+      }
+    }
+  },
   methods: {
+    ...mapActions(["fetchProxys"]),
     getSupportedImplementationAddressByName(name) {
-      return this.supportedContracts.find(contract => contract.name === name)
-        .implementationAddress;
+      return this.supportedImplementations.find(
+        contract => contract.name === name
+      ).implementation;
     },
     validateEthereumAddressOrEmpty(rule, value, callback) {
       if (
@@ -221,10 +216,6 @@ export default {
     }
   },
   async created() {
-    setTimeout(() => {
-      this.loading = false;
-    }, 1000);
-
     for (let proxy of this.proxys) {
       this.proxyForms[proxy.address] = this.$form.createForm(this);
     }
