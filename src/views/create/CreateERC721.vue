@@ -21,6 +21,7 @@
 
 <script>
 import CreateTokenForm from "@/components/CreateTokenForm.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "ERC721",
@@ -33,19 +34,19 @@ export default {
     CreateTokenForm
   },
   methods: {
+    ...mapActions(["createSmartContract"]),
     async createERC721SmartContract(data) {
-      console.log(data);
-
       let message = this.$message.loading(
         "Creating ERC721 contract, please confirm transaction on Metamask",
         0
       );
-      setTimeout(() => {
+      try {
+        const contractName = "StandaloneERC721";
+        const txHash = await this.createSmartContract({ contractName, data });
         setTimeout(message, 0);
         this.$notification.success({
           message: "ERC721 created!",
-          description:
-            "Your ERC721 token has been created, the transaction hash is: XY",
+          description: `Your ERC721 token has been created, the transaction hash is: ${txHash}`,
           duration: 0,
           style: {
             width: "600px",
@@ -54,7 +55,16 @@ export default {
           }
         });
         this.$refs.createTokenForm.form.resetFields();
-      }, 1000);
+        this.$router.push({ name: "proxys" });
+      } catch (error) {
+        setTimeout(message, 0);
+        let defaultMessage = "ERC721 could not be created";
+        if (error.message.includes("User denied transaction signature")) {
+          this.$message.error(`Transaction rejected. ${defaultMessage}`);
+        } else {
+          this.$message.error(defaultMessage);
+        }
+      }
     }
   }
 };

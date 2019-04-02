@@ -269,6 +269,9 @@
 </template>
 
 <script>
+import Web3 from "web3";
+
+const web3 = new Web3(window.ethereum);
 const tokenStandards = ["ERC20", "ERC721"];
 
 let minterId = 0;
@@ -314,7 +317,7 @@ export default {
       if (
         !value ||
         value.replace(/\s/g, "").length === 0 ||
-        value === "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
+        web3.utils.isAddress(value)
       ) {
         callback();
       } else {

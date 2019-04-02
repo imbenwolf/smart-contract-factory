@@ -1,10 +1,10 @@
 <template>
   <a-layout id="app" style="min-height: 100vh">
-    <metamask v-if="isNetworkSupported" />
+    <metamask v-if="!isMetamaskInstalled || isNetworkSupported" />
     <a-modal
       :closable="false"
       :footer="null"
-      :visible="!isNetworkSupported"
+      :visible="isMetamaskInstalled && !isNetworkSupported"
       :centered="true"
       class="ant-modal-confirm-error"
     >
@@ -132,7 +132,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["ethereumAccountAddress", "isNetworkSupported"]),
+    ...mapGetters([
+      "isMetamaskInstalled",
+      "ethereumAccountAddress",
+      "isNetworkSupported"
+    ]),
     year() {
       return new Date().getFullYear();
     }
