@@ -15,6 +15,13 @@ const Proxy = {
       from: window.ethereum.selectedAddress
     });
     return implemenationAddress;
+  },
+  async upgradeImplementation(proxyAddress, implementationAddress) {
+    const proxy = await Proxy.getInstance(proxyAddress);
+    const result = await proxy.upgradeTo(implementationAddress, {
+      from: window.ethereum.selectedAddress
+    });
+    return result;
   }
 };
 

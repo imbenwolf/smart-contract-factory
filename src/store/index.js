@@ -50,8 +50,14 @@ export default new Vuex.Store({
   actions: {
     requestMetamaskAccess: ({ commit }) =>
       commit("setIsAskingForMetamaskAccess", true),
-    createSmartContract: async (context, { contractName, data }) =>
-      await contractFactory.createSmartContract(contractName, data),
+    createSmartContract: async ({ dispatch }, { contractName, data }) => {
+      const result = await contractFactory.createSmartContract(
+        contractName,
+        data
+      );
+      dispatch("fetchAllContracts");
+      return result;
+    },
     fetchAllContracts: async ({ commit }) => {
       commit("setLoadingAllContracts", true);
       const contracts = await contractFactory.getAllContracts();
@@ -74,6 +80,22 @@ export default new Vuex.Store({
       }
       commit("setProxys", proxys);
       commit("setLoadingProxys", false);
+    },
+    upgradeProxyImplementation: async (
+      { state, commit },
+      { proxyAddress, implementationAddress }
+    ) => {
+      const result = await contractProxy.upgradeImplementation(
+        proxyAddress,
+        implementationAddress
+      );
+
+      let proxys = state.proxys;
+      let upgradedProxy = proxys.find(proxy => (proxy.address = proxyAddress));
+      upgradedProxy.implementation = implementationAddress;
+      commit("setProxys", proxys);
+
+      return result;
     },
     fetchAllSupportedContracts: async ({ commit }) => {
       const supportedImplementations = await contractFactory.getAllSupportedImplementations();

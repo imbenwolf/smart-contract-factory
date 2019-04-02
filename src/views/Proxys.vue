@@ -141,8 +141,10 @@
 </template>
 
 <script>
-import AdminUpgradeabilityProxy from "@/../contracts/AdminUpgradeabilityProxy.sol";
+import Web3 from "web3";
+const web3 = new Web3(window.ethereum);
 
+import AdminUpgradeabilityProxy from "@/../contracts/AdminUpgradeabilityProxy.sol";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -166,11 +168,17 @@ export default {
     async loadingAllContracts(isLoading) {
       if (!isLoading) {
         await this.fetchProxys();
+
+        let forms = [];
+        for (let proxy of this.proxys) {
+          forms[proxy.address] = this.$form.createForm(this);
+        }
+        this.proxyForms = forms;
       }
     }
   },
   methods: {
-    ...mapActions(["fetchProxys"]),
+    ...mapActions(["fetchProxys", "upgradeProxyImplementation"]),
     getSupportedImplementationAddressByName(name) {
       return this.supportedImplementations.find(
         contract => contract.name === name
@@ -180,29 +188,30 @@ export default {
       if (
         !value ||
         value.replace(/\s/g, "").length === 0 ||
-        value === "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
+        web3.utils.isAddress(value)
       ) {
         callback();
       } else {
         callback("Please input a valid ethereum address");
       }
     },
-    handleUpgradeImplementation(proxy) {
+    async handleUpgradeImplementation(proxy) {
       this.proxyForms[proxy.address].validateFields(async (err, values) => {
         if (!err) {
-          console.log(values);
-
           let message = this.$message.loading(
             "Upgrading implementation address, please confirm transaction on Metamask",
             0
           );
 
-          setTimeout(() => {
+          try {
+            const { tx } = await this.upgradeProxyImplementation({
+              proxyAddress: proxy.address,
+              implementationAddress: values.implementationAddress
+            });
             setTimeout(message, 0);
             this.$notification.success({
               message: "Implementation address upgraded!",
-              description:
-                "Your Implementation address has been upgraded, the transaction hash is: XY",
+              description: `Your Implementation address has been upgraded, the transaction hash is: ${tx}`,
               duration: 0,
               style: {
                 width: "600px",
@@ -210,14 +219,18 @@ export default {
                 marginTop: "25px"
               }
             });
-          }, 1000);
+            this.proxyForms[proxy.address].resetFields();
+          } catch (error) {
+            setTimeout(message, 0);
+            let defaultMessage = "Implementation address could not be upgraded";
+            if (error.message.includes("User denied transaction signature")) {
+              this.$message.error(`Transaction rejected. ${defaultMessage}`);
+            } else {
+              this.$message.error(defaultMessage);
+            }
+          }
         }
       });
-    }
-  },
-  async created() {
-    for (let proxy of this.proxys) {
-      this.proxyForms[proxy.address] = this.$form.createForm(this);
     }
   }
 };
