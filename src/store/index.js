@@ -100,6 +100,17 @@ export default new Vuex.Store({
     fetchAllSupportedContracts: async ({ commit }) => {
       const supportedImplementations = await contractFactory.getAllSupportedImplementations();
       commit("setSupportedImplementions", supportedImplementations);
+    },
+    saveSmartContract: async (
+      { dispatch },
+      { contractAddress, contractName }
+    ) => {
+      const result = await contractFactory.saveSmartContract(
+        contractAddress,
+        contractName
+      );
+      dispatch("fetchAllContracts");
+      return result;
     }
   },
   plugins: [Metamask.create]

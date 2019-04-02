@@ -108,6 +108,13 @@ const Factory = {
       });
     }
     return supportedImplementations;
+  },
+  async saveSmartContract(address, name) {
+    const factory = await Factory.getInstance();
+    const { tx } = await factory.saveSmartContract(address, name, {
+      from: window.ethereum.selectedAddress
+    });
+    return tx;
   }
 };
 
