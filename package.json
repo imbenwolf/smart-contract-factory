@@ -37,6 +37,7 @@
     "sass-loader": "^7.1.0",
     "shelljs": "^0.8.3",
     "truffle": "^5.0.10",
+    "truffle-contract": "4.0.9",
     "truffle-legacy-system": "^1.0.6",
     "truffle-solidity-loader": "^0.1.10",
     "vue-cli-plugin-ant-design": "^1.0.0",
