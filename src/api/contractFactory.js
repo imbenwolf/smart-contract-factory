@@ -69,6 +69,27 @@ const Factory = {
     );
     return tx;
   },
+  async getAllContracts() {
+    const factory = await Factory.getInstance();
+    let numberOfContracts = Number(
+      await factory.getNumberOfContracts({
+        from: window.ethereum.selectedAddress
+      })
+    );
+    let contracts = [];
+    for (let id = 0; id < numberOfContracts; id++) {
+      let contractObject = await factory.getContract(id, {
+        from: window.ethereum.selectedAddress
+      });
+      let contract = {
+        address: contractObject["0"],
+        name: contractObject["1"],
+        isAdmin: contractObject["2"]
+      };
+      contracts.push(contract);
+    }
+    return contracts;
+  },
   async getImplementationAddressOfContract(contractName) {
     const factory = await Factory.getInstance();
     const implementationAddress = await factory.getImplementation(

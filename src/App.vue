@@ -147,9 +147,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchAllSupportedContracts"])
+    ...mapActions(["fetchAllContracts", "fetchAllSupportedContracts"])
   },
   async mounted() {
+    await this.fetchAllContracts();
     await this.fetchAllSupportedContracts();
   }
 };
