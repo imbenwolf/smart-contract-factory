@@ -17,8 +17,8 @@ export default new Vuex.Store({
     ethereumNetworkId: null,
     loadingAllContracts: false,
     allContracts: [],
-    loadingProxys: false,
-    proxys: [],
+    loadingProxies: false,
+    proxies: [],
     supportedImplementations: [],
     loadingSavedContracts: false,
     savedContracts: []
@@ -30,8 +30,8 @@ export default new Vuex.Store({
     isNetworkSupported: state =>
       factoryContract.hasNetwork(state.ethereumNetworkId),
     loadingAllContracts: state => state.loadingAllContracts,
-    loadingProxys: state => state.loadingProxys,
-    proxys: state => state.proxys,
+    loadingProxies: state => state.loadingProxies,
+    proxies: state => state.proxies,
     supportedImplementations: state => state.supportedImplementations,
     loadingSavedContracts: state => state.loadingSavedContracts,
     savedContracts: state => state.savedContracts
@@ -48,8 +48,8 @@ export default new Vuex.Store({
       (state.loadingAllContracts = isLoading),
     setAllContracts: (state, newContracts) =>
       (state.allContracts = newContracts),
-    setLoadingProxys: (state, isLoading) => (state.loadingProxys = isLoading),
-    setProxys: (state, newProxys) => (state.proxys = newProxys),
+    setLoadingProxies: (state, isLoading) => (state.loadingProxies = isLoading),
+    setProxies: (state, newProxies) => (state.proxies = newProxies),
     setSupportedImplementions: (state, newSupportedImplementations) =>
       (state.supportedImplementations = newSupportedImplementations),
     setLoadingSavedContracts: (state, isLoading) =>
@@ -74,22 +74,22 @@ export default new Vuex.Store({
       commit("setAllContracts", contracts);
       commit("setLoadingAllContracts", false);
     },
-    fetchProxys: async ({ state, commit }) => {
-      commit("setLoadingProxys", true);
-      let proxys = state.allContracts
+    fetchProxies: async ({ state, commit }) => {
+      commit("setLoadingProxies", true);
+      let proxies = state.allContracts
         .filter(contract => contract.isAdmin)
         .map(contract => ({
           address: contract.address,
           name: contract.name
         }));
-      for (let proxy of proxys) {
+      for (let proxy of proxies) {
         const implementationAddress = await proxyContract.getImplementationAddress(
           proxy.address
         );
         proxy.implementation = implementationAddress;
       }
-      commit("setProxys", proxys);
-      commit("setLoadingProxys", false);
+      commit("setProxies", proxies);
+      commit("setLoadingProxies", false);
     },
     upgradeProxyImplementation: async (
       { state, commit },
@@ -100,10 +100,10 @@ export default new Vuex.Store({
         implementationAddress
       );
 
-      let proxys = state.proxys;
-      let upgradedProxy = proxys.find(proxy => (proxy.address = proxyAddress));
+      let proxies = state.proxies;
+      let upgradedProxy = proxies.find(proxy => (proxy.address = proxyAddress));
       upgradedProxy.implementation = implementationAddress;
-      commit("setProxys", proxys);
+      commit("setProxies", proxies);
 
       return result;
     },

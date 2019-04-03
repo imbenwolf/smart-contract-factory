@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Contracts from "@/views/Contracts.vue";
-import Proxys from "@/views/Proxys.vue";
+import Proxies from "@/views/Proxies.vue";
 
 import CreateERC20 from "@/views/create/CreateERC20.vue";
 import CreateERC721 from "@/views/create/CreateERC721.vue";
@@ -25,9 +25,9 @@ export default new Router({
       component: Contracts
     },
     {
-      path: "/proxys",
-      name: "proxys",
-      component: Proxys
+      path: "/proxies",
+      name: "proxies",
+      component: Proxies
     },
     ...withPrefix("/create", [
       {

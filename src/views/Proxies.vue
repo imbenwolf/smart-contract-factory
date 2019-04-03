@@ -11,19 +11,19 @@
     <div class="content">
       <div class="overview">
         <a-skeleton
-          v-if="loadingAllContracts || loadingProxys"
+          v-if="loadingAllContracts || loadingProxies"
           active
           :paragraph="{ rows: 10 }"
         />
-        <a-tabs v-else-if="proxys.length > 0">
+        <a-tabs v-else-if="proxies.length > 0">
           <a-tab-pane key="1">
             <span slot="tab">
               <a-icon type="fork" />
-              Proxys
+              Proxies
             </span>
 
             <a-collapse :bordered="false">
-              <a-collapse-panel v-for="proxy in proxys" :key="proxy.address">
+              <a-collapse-panel v-for="proxy in proxies" :key="proxy.address">
                 <template slot="header">
                   <a-row>
                     <a-col :span="12">{{ proxy.address }}</a-col>
@@ -131,7 +131,7 @@
 
         <a-alert
           v-else
-          message='You don&#39;t have any proxys. Create one now under "Create".'
+          message='You don&#39;t have any proxies. Create one now under "Create".'
           type="info"
           showIcon
         />
@@ -148,10 +148,9 @@ import AdminUpgradeabilityProxy from "@/../contracts/AdminUpgradeabilityProxy.so
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "Proxys",
+  name: "Proxies",
   data() {
     return {
-      proxysWithInformation: [],
       proxyForms: [],
       proxyContract: AdminUpgradeabilityProxy
     };
@@ -159,8 +158,8 @@ export default {
   computed: {
     ...mapGetters([
       "loadingAllContracts",
-      "loadingProxys",
-      "proxys",
+      "loadingProxies",
+      "proxies",
       "supportedImplementations"
     ])
   },
@@ -170,12 +169,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchProxys", "upgradeProxyImplementation"]),
+    ...mapActions(["fetchProxies", "upgradeProxyImplementation"]),
     async setupComponent() {
-      await this.fetchProxys();
+      await this.fetchProxies();
 
       let forms = [];
-      for (let proxy of this.proxys) {
+      for (let proxy of this.proxies) {
         forms[proxy.address] = this.$form.createForm(this);
       }
       this.proxyForms = forms;
