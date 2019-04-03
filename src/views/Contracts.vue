@@ -81,59 +81,71 @@
           <p :style="{ margin: 0 }">Logic contract for:</p>
           <h2 :style="{ 'margin-bottom': '25px' }">{{ savedContract.name }}</h2>
 
-          <a-tabs>
+          <a-alert v-if="savedContract.information.error" type="error" showIcon>
+            <span slot="message">
+              Couldn't interact with the contract. Make sure that:<br />
+              <ul :style="{ marginBottom: '0' }">
+                <li>
+                  The implementation address of the logic contract is supported
+                </li>
+                <li>You are not the admin of the proxy contract</li>
+              </ul>
+            </span>
+          </a-alert>
+
+          <a-tabs v-else>
             <a-tab-pane key="1">
               <span slot="tab">
                 <a-icon type="info" />
                 Information
               </span>
 
-              <p>
-                Name: {{ savedContract.tokenName }}
-                <br />
-                <span v-if="savedContract.tokenSymbol">
-                  Symbol: {{ savedContract.tokenSymbol }}
-                </span>
-                <br />
-                <span v-if="savedContract.tokenDecimals">
-                  Decimals: {{ savedContract.tokenDecimals }}
-                </span>
-              </p>
-              <p>Total supply: {{ savedContract.tokenTotalSupply }}</p>
+              <span>
+                <p>
+                  Name: {{ savedContract.information.name }}
+                  <br />
+                  Symbol: {{ savedContract.information.symbol }}
+                  <br />
+                  <span v-if="savedContract.information.decimals">
+                    Decimals: {{ savedContract.information.decimals }}
+                  </span>
+                </p>
+                <p>Total supply: {{ savedContract.information.totalSupply }}</p>
 
-              <a-divider>Get balance</a-divider>
-              <a-form
-                layout="inline"
-                style="text-align: center"
-                :form="contractForms[index]"
-                @submit.prevent="handleGetBalance(index, savedContract)"
-              >
-                <a-form-item label="Address">
-                  <a-input
-                    v-decorator="[
-                      'address',
-                      {
-                        rules: [
-                          {
-                            required: true,
-                            whitespace: true,
-                            message: 'Please input an address'
-                          },
-                          {
-                            validator: validateEthereumAddressOrEmpty
-                          }
-                        ]
-                      }
-                    ]"
-                  >
-                  </a-input>
-                </a-form-item>
-                <a-form-item>
-                  <a-button type="primary" html-type="submit">
-                    Get balance
-                  </a-button>
-                </a-form-item>
-              </a-form>
+                <a-divider>Get balance</a-divider>
+                <a-form
+                  layout="inline"
+                  style="text-align: center"
+                  :form="contractForms[index]"
+                  @submit.prevent="handleGetBalance(index, savedContract)"
+                >
+                  <a-form-item label="Address">
+                    <a-input
+                      v-decorator="[
+                        'address',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              whitespace: true,
+                              message: 'Please input an address'
+                            },
+                            {
+                              validator: validateEthereumAddressOrEmpty
+                            }
+                          ]
+                        }
+                      ]"
+                    >
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" html-type="submit">
+                      Get balance
+                    </a-button>
+                  </a-form-item>
+                </a-form>
+              </span>
             </a-tab-pane>
 
             <a-tab-pane key="2">
@@ -141,9 +153,9 @@
                 <a-icon type="file-protect" />
                 Source code
               </span>
-              <pre class="code">{{
-                getContractWithName(savedContract.name).sourceCode
-              }}</pre>
+              <pre class="code"
+                >{{ logicContracts[savedContract.name].source }}
+              </pre>
             </a-tab-pane>
 
             <a-tab-pane key="3">
@@ -151,9 +163,9 @@
                 <a-icon type="code" />
                 ABI
               </span>
-              <pre class="code">{{
-                getContractWithName(savedContract.name).abi
-              }}</pre>
+              <pre class="code"
+                >{{ logicContracts[savedContract.name].abi }}
+              </pre>
             </a-tab-pane>
           </a-tabs>
         </a-collapse-panel>
@@ -173,13 +185,20 @@
 import Web3 from "web3";
 const web3 = new Web3(window.ethereum);
 
+import StandaloneERC20 from "@/../contracts/StandaloneERC20.sol";
+import StandaloneERC721 from "@/../contracts/StandaloneERC721.sol";
+
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Contracts",
   data() {
     return {
-      contractForms: []
+      contractForms: [],
+      logicContracts: {
+        StandaloneERC20,
+        StandaloneERC721
+      }
     };
   },
   computed: {
@@ -196,7 +215,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["saveSmartContract", "fetchSavedContracts"]),
+    ...mapActions(["saveSmartContract", "fetchSavedContracts", "getBalance"]),
     async setupComponent() {
       await this.fetchSavedContracts();
 
@@ -254,29 +273,25 @@ export default {
         }
       });
     },
-    handleGetBalance(index, contract) {
+    async handleGetBalance(index, contract) {
       this.contractForms[index].validateFields(async (err, values) => {
         if (!err) {
-          console.log(contract);
-          console.log(values);
-
+          const balance = await this.getBalance({
+            contract,
+            balanceAddress: values.address
+          });
           this.$notification.info({
             message: "Balance",
-            description: `The balance of ${values.address} is: 0`,
+            description: `The balance of ${values.address} is: ${balance}`,
             style: {
               width: "600px",
               marginLeft: "-220px",
               marginTop: "25px"
             }
           });
+          this.contractForms[index].resetFields();
         }
       });
-    },
-    getContractWithName(name) {
-      return {
-        sourceCode: name,
-        abi: "abi"
-      };
     }
   },
   beforeCreate() {

@@ -2,8 +2,10 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import Metamask from "@/store/metamask.js";
-import contractFactory from "@/api/factoryContract.js";
-import contractProxy from "@/api/proxyContract.js";
+import factoryContract from "@/api/factoryContract.js";
+import proxyContract from "@/api/proxyContract.js";
+import erc20Contract from "@/api/erc20Contract.js";
+import erc721Contract from "@/api/erc721Contract.js";
 
 Vue.use(Vuex);
 
@@ -26,7 +28,7 @@ export default new Vuex.Store({
     isAskingForMetamaskAccess: state => state.isAskingForMetamaskAccess,
     ethereumAccountAddress: state => state.ethereumAccountAddress,
     isNetworkSupported: state =>
-      contractFactory.hasNetwork(state.ethereumNetworkId),
+      factoryContract.hasNetwork(state.ethereumNetworkId),
     loadingAllContracts: state => state.loadingAllContracts,
     loadingProxys: state => state.loadingProxys,
     proxys: state => state.proxys,
@@ -59,7 +61,7 @@ export default new Vuex.Store({
     requestMetamaskAccess: ({ commit }) =>
       commit("setIsAskingForMetamaskAccess", true),
     createSmartContract: async ({ dispatch }, { contractName, data }) => {
-      const result = await contractFactory.createSmartContract(
+      const result = await factoryContract.createSmartContract(
         contractName,
         data
       );
@@ -68,7 +70,7 @@ export default new Vuex.Store({
     },
     fetchAllContracts: async ({ commit }) => {
       commit("setLoadingAllContracts", true);
-      const contracts = await contractFactory.getAllContracts();
+      const contracts = await factoryContract.getAllContracts();
       commit("setAllContracts", contracts);
       commit("setLoadingAllContracts", false);
     },
@@ -81,7 +83,7 @@ export default new Vuex.Store({
           name: contract.name
         }));
       for (let proxy of proxys) {
-        const implementationAddress = await contractProxy.getImplementationAddress(
+        const implementationAddress = await proxyContract.getImplementationAddress(
           proxy.address
         );
         proxy.implementation = implementationAddress;
@@ -93,7 +95,7 @@ export default new Vuex.Store({
       { state, commit },
       { proxyAddress, implementationAddress }
     ) => {
-      const result = await contractProxy.upgradeImplementation(
+      const result = await proxyContract.upgradeImplementation(
         proxyAddress,
         implementationAddress
       );
@@ -105,15 +107,15 @@ export default new Vuex.Store({
 
       return result;
     },
-    fetchAllSupportedContracts: async ({ commit }) => {
-      const supportedImplementations = await contractFactory.getAllSupportedImplementations();
+    fetchAllSupportedImplementations: async ({ commit }) => {
+      const supportedImplementations = await factoryContract.getAllSupportedImplementations();
       commit("setSupportedImplementions", supportedImplementations);
     },
     saveSmartContract: async (
       { dispatch },
       { contractAddress, contractName }
     ) => {
-      const result = await contractFactory.saveSmartContract(
+      const result = await factoryContract.saveSmartContract(
         contractAddress,
         contractName
       );
@@ -128,10 +130,46 @@ export default new Vuex.Store({
           address: contract.address,
           name: contract.name
         }));
-      // Todo get information
-      // for (let savedContract of savedContracts) {}
+      for (let savedContract of savedContracts) {
+        let contractInformation;
+        try {
+          switch (savedContract.name) {
+            case "StandaloneERC20":
+              contractInformation = await erc20Contract.getInformation(
+                savedContract.address
+              );
+              break;
+            case "StandaloneERC721":
+              contractInformation = await erc721Contract.getInformation(
+                savedContract.address
+              );
+              break;
+          }
+        } catch (error) {
+          contractInformation = { error: true };
+        }
+        savedContract.information = contractInformation;
+      }
       commit("setSavedContracts", savedContracts);
       commit("setLoadingSavedContracts", false);
+    },
+    getBalance: async (context, { contract, balanceAddress }) => {
+      let balance;
+      switch (contract.name) {
+        case "StandaloneERC20":
+          balance = await erc20Contract.getBalance(
+            contract.address,
+            balanceAddress
+          );
+          break;
+        case "StandaloneERC721":
+          balance = await erc721Contract.getBalance(
+            contract.address,
+            balanceAddress
+          );
+          break;
+      }
+      return balance;
     }
   },
   plugins: [Metamask.create]

@@ -150,11 +150,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchAllContracts", "fetchAllSupportedContracts"])
+    ...mapActions(["fetchAllContracts", "fetchAllSupportedImplementations"])
   },
   async mounted() {
+    await this.fetchAllSupportedImplementations();
     await this.fetchAllContracts();
-    await this.fetchAllSupportedContracts();
   }
 };
 </script>
