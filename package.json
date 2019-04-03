@@ -58,7 +58,7 @@
       "vue-cli-service lint",
       "git add"
     ],
-    "*.sol": [
+    "!(contracts/flattened-resources)*.sol": [
       "prettier --write",
       "solhint",
       "git add"

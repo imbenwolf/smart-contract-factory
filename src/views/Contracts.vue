@@ -188,8 +188,8 @@
 import Web3 from "web3";
 const web3 = new Web3(window.ethereum);
 
-import StandaloneERC20 from "@/../contracts/StandaloneERC20.sol";
-import StandaloneERC721 from "@/../contracts/StandaloneERC721.sol";
+import StandaloneERC20 from "@/../contracts/flattened-resources/StandaloneERC20.sol";
+import StandaloneERC721 from "@/../contracts/flattened-resources/StandaloneERC721.sol";
 
 import { mapGetters, mapActions } from "vuex";
 

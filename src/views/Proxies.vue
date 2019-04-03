@@ -145,7 +145,7 @@
 import Web3 from "web3";
 const web3 = new Web3(window.ethereum);
 
-import AdminUpgradeabilityProxy from "@/../contracts/AdminUpgradeabilityProxy.sol";
+import AdminUpgradeabilityProxy from "@/../contracts/flattened-resources/AdminUpgradeabilityProxy.sol";
 import { mapGetters, mapActions } from "vuex";
 
 export default {

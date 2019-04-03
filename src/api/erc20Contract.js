@@ -1,6 +1,6 @@
 import Contract from "truffle-contract";
 
-import StandaloneERC20 from "@/../contracts/StandaloneERC20.sol";
+import StandaloneERC20 from "@/../contracts/flattened-resources/StandaloneERC20.sol";
 
 const ERC20 = {
   async getInstance(address) {

@@ -1,6 +1,6 @@
 import Contract from "truffle-contract";
 
-import AdminUpgradeabilityProxy from "@/../contracts/AdminUpgradeabilityProxy.sol";
+import AdminUpgradeabilityProxy from "@/../contracts/flattened-resources/AdminUpgradeabilityProxy.sol";
 
 const Proxy = {
   async getInstance(address) {
