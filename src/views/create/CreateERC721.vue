@@ -6,6 +6,9 @@
         Non-Fungibility means each token is unique and unreplaceable by another
         token.<br />ERC721 is known for it's use as a collectible (e.g
         Cryptokitties).
+        <a href="https://en.bitcoinwiki.org/wiki/ERC-721" target="_blank"
+          >More information</a
+        >
       </p>
     </a-alert>
 
@@ -55,7 +58,7 @@ export default {
           }
         });
         this.$refs.createTokenForm.form.resetFields();
-        this.$router.push({ name: "proxys" });
+        this.$router.push({ name: "proxies" });
       } catch (error) {
         setTimeout(message, 0);
         let defaultMessage = "ERC721 could not be created";

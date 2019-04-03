@@ -9,6 +9,7 @@
     >
       <a-form-item label="Address">
         <a-input
+          placeholder="e.g. 0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
           v-decorator="[
             'address',
             {
@@ -29,6 +30,7 @@
       </a-form-item>
       <a-form-item label="Supported contract">
         <a-select
+          placeholder="Select a contract"
           style="width: 200px"
           v-decorator="[
             'supportedContract',
@@ -121,6 +123,7 @@
                 >
                   <a-form-item label="Address">
                     <a-input
+                      placeholder="e.g. 0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
                       v-decorator="[
                         'address',
                         {

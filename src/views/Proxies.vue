@@ -84,6 +84,7 @@
                 >
                   <a-form-item label="Implementation address">
                     <a-input
+                      placeholder="e.g. 0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
                       v-decorator="[
                         'implementationAddress',
                         {

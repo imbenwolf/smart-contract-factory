@@ -6,6 +6,7 @@
   >
     <a-form-item label="Name" v-bind="formItemLayout">
       <a-input
+        placeholder="e.g. MyToken"
         v-decorator="[
           'name',
           {
@@ -14,6 +15,10 @@
                 required: true,
                 whitespace: true,
                 message: 'Please input the name of the token!'
+              },
+              {
+                max: 50,
+                message: 'The name must not exceed 50 characters'
               }
             ]
           }
@@ -30,6 +35,7 @@
         </a-tooltip>
       </span>
       <a-input
+        placeholder="e.g. MYT"
         v-decorator="[
           'symbol',
           {
@@ -58,6 +64,7 @@
         </a-tooltip>
       </span>
       <a-input-number
+        placeholder="e.g. 18"
         :min="0"
         :max="20"
         style="width: 100%;"
@@ -114,6 +121,8 @@
       <div v-if="form.getFieldValue('initialTokens')">
         <a-form-item label="Initial value" v-bind="formItemLayout">
           <a-input-number
+            placeholder="e.g. 100"
+            :min="0"
             style="width: 100%"
             v-decorator="[
               'initialNumberOfTokens',
@@ -131,6 +140,7 @@
         </a-form-item>
         <a-form-item label="Initial holder" v-bind="formItemLayout">
           <a-input
+            placeholder="e.g. 0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
             v-decorator="[
               'initialHolderOfTokens',
               {
@@ -166,6 +176,7 @@
           </a-tooltip>
         </span>
         <a-input
+          placeholder="e.g. 0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
           v-decorator="[
             `minters[${id}]`,
             {
@@ -181,7 +192,6 @@
               ]
             }
           ]"
-          placeholder="Minter address"
           :style="
             form.getFieldValue('minterIds').length > 1
               ? {
@@ -221,6 +231,7 @@
           </a-tooltip>
         </span>
         <a-input
+          placeholder="e.g. 0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
           v-decorator="[
             `pausers[${id}]`,
             {
@@ -236,7 +247,6 @@
               ]
             }
           ]"
-          placeholder="Pauser address"
           :style="
             form.getFieldValue('pauserIds').length > 1
               ? {
@@ -292,22 +302,22 @@ export default {
         labelCol: {
           sm: { span: 24 },
           md: { span: 6 },
-          lg: { span: 4, offset: 5 },
+          lg: { span: 4, offset: 4 },
           xl: { span: 4, offset: 5 }
         },
         wrapperCol: {
           sm: { span: 24 },
           md: { span: 16 },
           lg: { span: 10 },
-          xl: { span: 6 }
+          xl: { span: 7 }
         }
       },
       tailFormItemLayout: {
         wrapperCol: {
           sm: { span: 24, offset: 0 },
           md: { span: 16, offset: 6 },
-          lg: { span: 10, offset: 9 },
-          xl: { span: 6, offset: 9 }
+          lg: { span: 10, offset: 8 },
+          xl: { span: 7, offset: 9 }
         }
       }
     };

@@ -5,6 +5,9 @@
         {{ tokenStandard }} is the Ethereum standard for fungible tokens.
         Fungibility means each token is replaceable by an identical token.<br />ERC20
         is the most used token contract and known for it's use in ICOs.
+        <a href="https://en.bitcoinwiki.org/wiki/ERC20" target="_blank"
+          >More information</a
+        >
       </p>
     </a-alert>
 
@@ -54,7 +57,7 @@ export default {
           }
         });
         this.$refs.createTokenForm.form.resetFields();
-        this.$router.push({ name: "proxys" });
+        this.$router.push({ name: "proxies" });
       } catch (error) {
         setTimeout(message, 0);
         let defaultMessage = "ERC20 could not be created";
