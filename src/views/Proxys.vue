@@ -166,19 +166,20 @@ export default {
   },
   watch: {
     async loadingAllContracts(isLoading) {
-      if (!isLoading) {
-        await this.fetchProxys();
-
-        let forms = [];
-        for (let proxy of this.proxys) {
-          forms[proxy.address] = this.$form.createForm(this);
-        }
-        this.proxyForms = forms;
-      }
+      if (!isLoading) this.setupComponent();
     }
   },
   methods: {
     ...mapActions(["fetchProxys", "upgradeProxyImplementation"]),
+    async setupComponent() {
+      await this.fetchProxys();
+
+      let forms = [];
+      for (let proxy of this.proxys) {
+        forms[proxy.address] = this.$form.createForm(this);
+      }
+      this.proxyForms = forms;
+    },
     getSupportedImplementationAddressByName(name) {
       return this.supportedImplementations.find(
         contract => contract.name === name
@@ -232,6 +233,9 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    if (!this.loadingAllContracts) this.setupComponent();
   }
 };
 </script>

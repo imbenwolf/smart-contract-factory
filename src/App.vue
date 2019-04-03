@@ -145,7 +145,7 @@ export default {
     $route(to) {
       this.selectedKeys = [to.name];
     },
-    ethereumAddress() {
+    ethereumAccountAddress() {
       this.fetchAllContracts();
     }
   },
