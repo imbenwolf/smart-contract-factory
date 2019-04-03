@@ -79,13 +79,21 @@
         marginLeft: collapsed ? '80px' : '200px'
       }"
     >
-      <a-layout-header style="background: #fff; padding: 0">
+      <a-layout-header
+        style="background: #fff; padding: 0; height: 76px; line-height: 76px;"
+      >
         <a-row
           v-if="ethereumAccountAddress"
           type="flex"
-          justify="end"
+          justify="space-between"
           :style="{ 'margin-right': '10px' }"
         >
+          <a-col>
+            <img
+              :style="{ height: '70px', marginLeft: '16px' }"
+              src="./assets/smart-contract-factory-logo.svg"
+            />
+          </a-col>
           <a-col>
             <span :style="{ marginRight: '16px' }">Logged in:</span>
             <a-tag :style="{ cursor: 'default' }" color="#001529">
