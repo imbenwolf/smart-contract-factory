@@ -59,20 +59,27 @@
     <a-divider />
 
     <div class="overview">
-      <a-skeleton v-if="loading" active :paragraph="{ rows: 10 }" />
-      <a-collapse v-else-if="contracts.length > 0" :bordered="false">
-        <a-collapse-panel v-for="contract in contracts" :key="contract.address">
+      <a-skeleton
+        v-if="loadingAllContracts || loadingSavedContracts"
+        active
+        :paragraph="{ rows: 10 }"
+      />
+      <a-collapse v-else-if="savedContracts.length > 0" :bordered="false">
+        <a-collapse-panel
+          v-for="(savedContract, index) in savedContracts"
+          :key="index"
+        >
           <template slot="header">
             <a-row>
-              <a-col :span="12">{{ contract.address }}</a-col>
+              <a-col :span="12">{{ savedContract.address }}</a-col>
               <a-col :span="11" :style="{ 'text-align': 'right' }">{{
-                contract.name
+                savedContract.name
               }}</a-col>
             </a-row>
           </template>
 
           <p :style="{ margin: 0 }">Logic contract for:</p>
-          <h2 :style="{ 'margin-bottom': '25px' }">{{ contract.name }}</h2>
+          <h2 :style="{ 'margin-bottom': '25px' }">{{ savedContract.name }}</h2>
 
           <a-tabs>
             <a-tab-pane key="1">
@@ -82,24 +89,24 @@
               </span>
 
               <p>
-                Name: {{ contract.tokenName }}
+                Name: {{ savedContract.tokenName }}
                 <br />
-                <span v-if="contract.tokenSymbol">
-                  Symbol: {{ contract.tokenSymbol }}
+                <span v-if="savedContract.tokenSymbol">
+                  Symbol: {{ savedContract.tokenSymbol }}
                 </span>
                 <br />
-                <span v-if="contract.tokenDecimals">
-                  Decimals: {{ contract.tokenDecimals }}
+                <span v-if="savedContract.tokenDecimals">
+                  Decimals: {{ savedContract.tokenDecimals }}
                 </span>
               </p>
-              <p>Total supply: {{ contract.tokenTotalSupply }}</p>
+              <p>Total supply: {{ savedContract.tokenTotalSupply }}</p>
 
               <a-divider>Get balance</a-divider>
               <a-form
                 layout="inline"
                 style="text-align: center"
-                :form="contractForms[contract.address]"
-                @submit.prevent="handleGetBalance(contract)"
+                :form="contractForms[index]"
+                @submit.prevent="handleGetBalance(index, savedContract)"
               >
                 <a-form-item label="Address">
                   <a-input
@@ -135,7 +142,7 @@
                 Source code
               </span>
               <pre class="code">{{
-                getContractWithName(contract.name).sourceCode
+                getContractWithName(savedContract.name).sourceCode
               }}</pre>
             </a-tab-pane>
 
@@ -145,7 +152,7 @@
                 ABI
               </span>
               <pre class="code">{{
-                getContractWithName(contract.name).abi
+                getContractWithName(savedContract.name).abi
               }}</pre>
             </a-tab-pane>
           </a-tabs>
@@ -172,48 +179,33 @@ export default {
   name: "Contracts",
   data() {
     return {
-      loading: true,
-      contractForms: [],
-      contracts: [
-        {
-          name: "ERC20",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975041",
-          tokenName: "MockedCoin",
-          tokenSymbol: "MKC",
-          tokenDecimals: 5,
-          tokenTotalSupply: 123
-        },
-        {
-          name: "ERC20",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975042",
-          tokenName: "MockedCoin",
-          tokenSymbol: "MKC",
-          tokenDecimals: 5,
-          tokenTotalSupply: 123
-        },
-        {
-          name: "ERC721",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043",
-          tokenName: "MockedCoin",
-          tokenSymbol: "MKC",
-          tokenTotalSupply: 123
-        },
-        {
-          name: "ERC20",
-          address: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975044",
-          tokenName: "MockedCoin",
-          tokenSymbol: "MKC",
-          tokenDecimals: 5,
-          tokenTotalSupply: 123
-        }
-      ]
+      contractForms: []
     };
   },
   computed: {
-    ...mapGetters(["supportedImplementations"])
+    ...mapGetters([
+      "supportedImplementations",
+      "loadingAllContracts",
+      "loadingSavedContracts",
+      "savedContracts"
+    ])
+  },
+  watch: {
+    async loadingAllContracts(isLoading) {
+      if (!isLoading) this.setupComponent();
+    }
   },
   methods: {
-    ...mapActions(["saveSmartContract"]),
+    ...mapActions(["saveSmartContract", "fetchSavedContracts"]),
+    async setupComponent() {
+      await this.fetchSavedContracts();
+
+      let forms = [];
+      for (let index in this.savedContracts) {
+        forms[index] = this.$form.createForm(this);
+      }
+      this.contractForms = forms;
+    },
     validateEthereumAddressOrEmpty(rule, value, callback) {
       if (
         !value ||
@@ -262,25 +254,23 @@ export default {
         }
       });
     },
-    handleGetBalance(contract) {
-      this.contractForms[contract.address].validateFields(
-        async (err, values) => {
-          if (!err) {
-            console.log(contract);
-            console.log(values);
+    handleGetBalance(index, contract) {
+      this.contractForms[index].validateFields(async (err, values) => {
+        if (!err) {
+          console.log(contract);
+          console.log(values);
 
-            this.$notification.info({
-              message: "Balance",
-              description: `The balance of ${values.address} is: 0`,
-              style: {
-                width: "600px",
-                marginLeft: "-220px",
-                marginTop: "25px"
-              }
-            });
-          }
+          this.$notification.info({
+            message: "Balance",
+            description: `The balance of ${values.address} is: 0`,
+            style: {
+              width: "600px",
+              marginLeft: "-220px",
+              marginTop: "25px"
+            }
+          });
         }
-      );
+      });
     },
     getContractWithName(name) {
       return {
@@ -289,14 +279,11 @@ export default {
       };
     }
   },
-  created() {
-    setTimeout(() => {
-      this.loading = false;
-    }, 1000);
+  beforeCreate() {
     this.savePublicContractForm = this.$form.createForm(this);
-    for (let contract of this.contracts) {
-      this.contractForms[contract.address] = this.$form.createForm(this);
-    }
+  },
+  mounted() {
+    if (!this.loadingAllContracts) this.setupComponent();
   }
 };
 </script>

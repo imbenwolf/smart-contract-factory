@@ -17,7 +17,9 @@ export default new Vuex.Store({
     allContracts: [],
     loadingProxys: false,
     proxys: [],
-    supportedImplementations: []
+    supportedImplementations: [],
+    loadingSavedContracts: false,
+    savedContracts: []
   },
   getters: {
     isMetamaskInstalled: state => state.isMetamaskInstalled,
@@ -28,7 +30,9 @@ export default new Vuex.Store({
     loadingAllContracts: state => state.loadingAllContracts,
     loadingProxys: state => state.loadingProxys,
     proxys: state => state.proxys,
-    supportedImplementations: state => state.supportedImplementations
+    supportedImplementations: state => state.supportedImplementations,
+    loadingSavedContracts: state => state.loadingSavedContracts,
+    savedContracts: state => state.savedContracts
   },
   mutations: {
     setIsMetamaskInstalled: (state, isInstalled) =>
@@ -45,7 +49,11 @@ export default new Vuex.Store({
     setLoadingProxys: (state, isLoading) => (state.loadingProxys = isLoading),
     setProxys: (state, newProxys) => (state.proxys = newProxys),
     setSupportedImplementions: (state, newSupportedImplementations) =>
-      (state.supportedImplementations = newSupportedImplementations)
+      (state.supportedImplementations = newSupportedImplementations),
+    setLoadingSavedContracts: (state, isLoading) =>
+      (state.loadingSavedContracts = isLoading),
+    setSavedContracts: (state, newSavedContracts) =>
+      (state.savedContracts = newSavedContracts)
   },
   actions: {
     requestMetamaskAccess: ({ commit }) =>
@@ -111,6 +119,19 @@ export default new Vuex.Store({
       );
       dispatch("fetchAllContracts");
       return result;
+    },
+    fetchSavedContracts: async ({ state, commit }) => {
+      commit("setLoadingSavedContracts", true);
+      let savedContracts = state.allContracts
+        .filter(contract => !contract.isAdmin)
+        .map(contract => ({
+          address: contract.address,
+          name: contract.name
+        }));
+      // Todo get information
+      // for (let savedContract of savedContracts) {}
+      commit("setSavedContracts", savedContracts);
+      commit("setLoadingSavedContracts", false);
     }
   },
   plugins: [Metamask.create]
