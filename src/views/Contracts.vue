@@ -44,9 +44,9 @@
           ]"
         >
           <a-select-option
-            v-for="supportedContract in supportedContracts"
-            :key="supportedContract.name"
-            >{{ supportedContract.name }}</a-select-option
+            v-for="supportedImplementation in supportedImplementations"
+            :key="supportedImplementation.name"
+            >{{ supportedImplementation.name }}</a-select-option
           >
         </a-select>
       </a-form-item>
@@ -163,22 +163,17 @@
 </template>
 
 <script>
+import Web3 from "web3";
+const web3 = new Web3(window.ethereum);
+
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "Contracts",
   data() {
     return {
       loading: true,
       contractForms: [],
-      supportedContracts: [
-        {
-          name: "ERC20",
-          implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-        },
-        {
-          name: "ERC721",
-          implementationAddress: "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
-        }
-      ],
       contracts: [
         {
           name: "ERC20",
@@ -214,12 +209,16 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["supportedImplementations"])
+  },
   methods: {
+    ...mapActions(["saveSmartContract"]),
     validateEthereumAddressOrEmpty(rule, value, callback) {
       if (
         !value ||
         value.replace(/\s/g, "").length === 0 ||
-        value === "0xfE1Ceec0bFc28Db1814A18A6fE6c6dB553975043"
+        web3.utils.isAddress(value)
       ) {
         callback();
       } else {
@@ -229,18 +228,20 @@ export default {
     handleSavePublicContract() {
       this.savePublicContractForm.validateFields(async (err, values) => {
         if (!err) {
-          console.log(values);
-
           let message = this.$message.loading(
             "Saving public contract, please confirm transaction on Metamask",
             0
           );
-          setTimeout(() => {
+
+          try {
+            const txHash = await this.saveSmartContract({
+              contractAddress: values.address,
+              contractName: values.supportedContract
+            });
             setTimeout(message, 0);
             this.$notification.success({
               message: "Public smart contract saved!",
-              description:
-                "The public smart contract has been saved for you, the transaction hash is: XY",
+              description: `The public smart contract has been saved for you, the transaction hash is: ${txHash}`,
               duration: 0,
               style: {
                 width: "600px",
@@ -248,7 +249,16 @@ export default {
                 marginTop: "25px"
               }
             });
-          }, 1000);
+            this.savePublicContractForm.resetFields();
+          } catch (error) {
+            setTimeout(message, 0);
+            let defaultMessage = "Public smart contract could not be saved";
+            if (error.message.includes("User denied transaction signature")) {
+              this.$message.error(`Transaction rejected. ${defaultMessage}`);
+            } else {
+              this.$message.error(defaultMessage);
+            }
+          }
         }
       });
     },

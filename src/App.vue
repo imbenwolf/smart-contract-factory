@@ -144,6 +144,9 @@ export default {
   watch: {
     $route(to) {
       this.selectedKeys = [to.name];
+    },
+    ethereumAddress() {
+      this.fetchAllContracts();
     }
   },
   methods: {
