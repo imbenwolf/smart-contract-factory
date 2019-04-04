@@ -7,6 +7,10 @@ const { Contracts, ZWeb3, assertRevert, encodeCall } = require("zos-lib");
 ZWeb3.initialize(web3.currentProvider);
 
 const SmartContractFactory = Contracts.getFromLocal("SmartContractFactory");
+const StandaloneERC721 = Contracts.getFromNodeModules(
+  "openzeppelin-eth",
+  "StandaloneERC721"
+);
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
 
@@ -106,6 +110,74 @@ contract("SmartContractFactory", accounts => {
         .call({ from: accounts[1] });
 
       numberOfContracts.should.be.eq.BN(1);
+    });
+  });
+
+  context("contract storage", async () => {
+    const ERC721Contract = "StandaloneERC721";
+    const ERC721Name = "CoolToken";
+    const ERC721Symbol = "COOL";
+
+    beforeEach(async () => {
+      let data = encodeCall(
+        "initialize",
+        ["string", "string", "address[]", "address[]"],
+        [ERC721Name, ERC721Symbol, [], []]
+      );
+
+      await this.smartContractFactory.methods
+        .createSmartContract(ERC721Contract, data)
+        .send({ from: accounts[1], gas: 1500000 });
+    });
+
+    it("should get number of contracts", async () => {
+      let numberOfContracts = await this.smartContractFactory.methods
+        .getNumberOfContracts()
+        .call({ from: accounts[1] });
+
+      numberOfContracts.should.be.eq.BN(1);
+    });
+
+    it("should get contract by key", async () => {
+      let numberOfContracts = await this.smartContractFactory.methods
+        .getNumberOfContracts()
+        .call({ from: accounts[1] });
+
+      let contract = await this.smartContractFactory.methods
+        .getContract(numberOfContracts - 1)
+        .call({ from: accounts[1] });
+
+      let contractAddress = contract[0];
+      let contractName = contract[1];
+      let isContractAdmin = contract[2];
+
+      let userERC721 = await StandaloneERC721.at(contractAddress);
+      let userERC721Name = await userERC721.methods.name().call();
+      let userERC721Symbol = await userERC721.methods.symbol().call();
+      contractName.should.be.equal(ERC721Contract);
+      isContractAdmin.should.be.true;
+      userERC721Name.should.be.equal(ERC721Name);
+      userERC721Symbol.should.be.equal(ERC721Symbol);
+    });
+
+    it("should not save unsupported contract as user", async () => {
+      await assertRevert(
+        this.smartContractFactory.methods
+          .saveSmartContract(emptyAddress, "MyContract")
+          .send({ from: accounts[0], gas: 100000 })
+      );
+    });
+
+    it("should save supported contract as user", async () => {
+      await this.smartContractFactory.methods
+        .saveSmartContract(emptyAddress, ERC721Contract)
+        .send({ from: accounts[0], gas: 100000 });
+
+      let numberOfContractsOfUser = await this.smartContractFactory.methods
+        .getNumberOfContracts()
+        .call({ from: accounts[0] });
+
+      numberOfContractsOfUser.should.be.eq.BN(1);
     });
   });
 });
