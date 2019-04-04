@@ -123,6 +123,7 @@
           <a-input-number
             placeholder="e.g. 100"
             :min="0"
+            :max="2 ** 256 - 1"
             style="width: 100%"
             v-decorator="[
               'initialNumberOfTokens',

@@ -83,7 +83,6 @@
         style="background: #fff; padding: 0; height: 76px; line-height: 76px;"
       >
         <a-row
-          v-if="ethereumAccountAddress"
           type="flex"
           justify="space-between"
           :style="{ 'margin-right': '10px' }"
@@ -94,7 +93,7 @@
               src="./assets/smart-contract-factory-logo.svg"
             />
           </a-col>
-          <a-col>
+          <a-col v-if="ethereumAccountAddress">
             <span :style="{ marginRight: '16px' }">Logged in:</span>
             <a-tag :style="{ cursor: 'default' }" color="#001529">
               <a-icon type="wallet" :style="{ 'margin-right': '5px' }" />
@@ -158,10 +157,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchAllContracts", "fetchAllSupportedImplementations"])
+    ...mapActions(["fetchAllContracts"])
   },
   async mounted() {
-    await this.fetchAllSupportedImplementations();
     await this.fetchAllContracts();
   }
 };

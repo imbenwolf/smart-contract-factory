@@ -72,6 +72,9 @@ export default new Vuex.Store({
       commit("setLoadingAllContracts", true);
       const contracts = await factoryContract.getAllContracts();
       commit("setAllContracts", contracts);
+
+      const supportedImplementations = await factoryContract.getAllSupportedImplementations();
+      commit("setSupportedImplementions", supportedImplementations);
       commit("setLoadingAllContracts", false);
     },
     fetchProxies: async ({ state, commit }) => {
@@ -101,15 +104,11 @@ export default new Vuex.Store({
       );
 
       let proxies = state.proxies;
-      let upgradedProxy = proxies.find(proxy => (proxy.address = proxyAddress));
+      let upgradedProxy = proxies.find(proxy => proxy.address === proxyAddress);
       upgradedProxy.implementation = implementationAddress;
       commit("setProxies", proxies);
 
       return result;
-    },
-    fetchAllSupportedImplementations: async ({ commit }) => {
-      const supportedImplementations = await factoryContract.getAllSupportedImplementations();
-      commit("setSupportedImplementions", supportedImplementations);
     },
     saveSmartContract: async (
       { dispatch },
@@ -143,6 +142,8 @@ export default new Vuex.Store({
               contractInformation = await erc721Contract.getInformation(
                 savedContract.address
               );
+              if (!contractInformation.name && !contractInformation.symbol)
+                contractInformation = { error: true };
               break;
           }
         } catch (error) {

@@ -73,8 +73,26 @@
         >
           <template slot="header">
             <a-row>
-              <a-col :span="12">{{ savedContract.address }}</a-col>
-              <a-col :span="11" :style="{ 'text-align': 'right' }">{{
+              <a-col :span="11">{{ savedContract.address }}</a-col>
+              <a-col :span="8">
+                <span v-if="savedContract.information.error">
+                  <a-icon
+                    type="close-circle"
+                    theme="twoTone"
+                    twoToneColor="#eb2f96"
+                  />
+                  Click here for next steps
+                </span>
+                <span v-else>
+                  <a-icon
+                    type="check-circle"
+                    theme="twoTone"
+                    twoToneColor="#52c41a"
+                  />
+                  {{ savedContract.information.name }}
+                </span>
+              </a-col>
+              <a-col :span="5" :style="{ 'text-align': 'right' }">{{
                 savedContract.name
               }}</a-col>
             </a-row>
