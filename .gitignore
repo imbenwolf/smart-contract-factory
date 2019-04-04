@@ -26,3 +26,7 @@ build
 # ZeppelinOS
 .zos.session
 zos.dev-*.json
+
+## Coverage reports
+coverage
+coverage.json

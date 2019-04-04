@@ -8,7 +8,9 @@
     "ethereum": "rm -f zos.dev-80085.json && yarn ganache-cli -i 80085",
     "migrate": "yarn lint:solidity && yarn truffle migrate",
     "lint:vue": "vue-cli-service lint",
-    "lint:solidity": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol"
+    "lint:solidity": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol",
+    "test:solidity": "truffle test",
+    "coverage:solidity": "concurrently --names \"TestRPC,Coverage\" --kill-others \"testrpc-sc -p 8555\" \"solidity-coverage\" || true"
   },
   "dependencies": {
     "ant-design-vue": "^1.3.7",
@@ -24,6 +26,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-import": "^1.11.0",
     "bn-chai": "^1.0.1",
+    "concurrently": "^4.1.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "fibers": "^3.1.1",
@@ -39,6 +42,7 @@
     "shelljs": "^0.8.3",
     "solhint": "^2.0.0",
     "solhint-plugin-prettier": "^0.0.2",
+    "solidity-coverage": "^0.5.11",
     "truffle": "^5.0.10",
     "truffle-contract": "4.0.9",
     "truffle-legacy-system": "^1.0.6",
