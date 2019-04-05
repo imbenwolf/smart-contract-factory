@@ -1,0 +1,7 @@
+---
+applications:
+- name: smart-contract-factory
+  memory: 256M
+  path: dist/
+  buildpacks:
+    - staticfile_buildpack

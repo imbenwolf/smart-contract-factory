@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "ethereum": "rm -f zos.dev-80085.json && yarn ganache-cli -i 80085",
-    "migrate": "yarn lint:solidity && yarn truffle migrate",
+    "serve": "vue-cli-service serve",
+    "migrate:backend": "yarn lint:solidity && yarn truffle migrate",
+    "build:frontend": "yarn lint:solidity && truffle compile && zos-truffle-merge -n 3 zos.ropsten.json && vue-cli-service build",
+    "deploy:frontend": "node deploy-frontend.js",
+    "test:backend": "truffle test",
+    "coverage:backend": "concurrently --names \"TestRPC,Coverage\" --kill-others \"testrpc-sc -p 8555\" \"solidity-coverage\" || true",
     "lint:vue": "vue-cli-service lint",
-    "lint:solidity": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol",
-    "test:solidity": "truffle test",
-    "coverage:solidity": "concurrently --names \"TestRPC,Coverage\" --kill-others \"testrpc-sc -p 8555\" \"solidity-coverage\" || true"
+    "lint:solidity": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol"
   },
   "dependencies": {
     "ant-design-vue": "^1.3.7",
@@ -51,7 +52,8 @@
     "vue-cli-plugin-ant-design": "^1.0.0",
     "vue-template-compiler": "^2.5.21",
     "zos": "^2.2.2",
-    "zos-lib": "^2.2.2"
+    "zos-lib": "^2.2.2",
+    "zos-truffle-merge": "^0.0.5"
   },
   "resolutions": {
     "truffle-solidity-loader/truffle-core": "5.0.8"
