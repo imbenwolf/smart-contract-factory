@@ -1,0 +1,166 @@
+{
+  "contracts": {
+    "SmartContractFactory": {
+      "address": "0xc3410085C1FF9Cc7a5A07644744cfc9911E2680a",
+      "constructorCode": "608060405234801561001057600080fd5b50611455806100206000396000f300",
+      "bodyBytecodeHash": "3377ab3e8e9364fd352ef1254c7335680164840c512fb776928aa60c6bfa525e",
+      "localBytecodeHash": "1becda7933f3090e3e28c7092aa104461b94ceadcd62bb3d6861bb1d38a50606",
+      "deployedBytecodeHash": "1becda7933f3090e3e28c7092aa104461b94ceadcd62bb3d6861bb1d38a50606",
+      "types": {
+        "t_bool": {
+          "id": "t_bool",
+          "kind": "elementary",
+          "label": "bool"
+        },
+        "t_uint256": {
+          "id": "t_uint256",
+          "kind": "elementary",
+          "label": "uint256"
+        },
+        "t_array:50<t_uint256>": {
+          "id": "t_array:50<t_uint256>",
+          "valueType": "t_uint256",
+          "length": "50",
+          "kind": "array",
+          "label": "uint256[50]"
+        },
+        "t_address": {
+          "id": "t_address",
+          "kind": "elementary",
+          "label": "address"
+        },
+        "t_string": {
+          "id": "t_string",
+          "kind": "elementary",
+          "label": "string"
+        },
+        "t_struct<SmartContractFactory.Contract>": {
+          "id": "t_struct<SmartContractFactory.Contract>",
+          "kind": "struct",
+          "label": "SmartContractFactory.Contract",
+          "members": [
+            {
+              "label": "contractAddress",
+              "astId": 73,
+              "type": "t_address",
+              "src": "1263:23:1"
+            },
+            {
+              "label": "contractName",
+              "astId": 75,
+              "type": "t_string",
+              "src": "1297:19:1"
+            },
+            {
+              "label": "isContractAdmin",
+              "astId": 77,
+              "type": "t_bool",
+              "src": "1327:20:1"
+            }
+          ]
+        },
+        "t_array:dyn<t_struct<SmartContractFactory.Contract>>": {
+          "id": "t_array:dyn<t_struct<SmartContractFactory.Contract>>",
+          "valueType": "t_struct<SmartContractFactory.Contract>",
+          "length": "dyn",
+          "kind": "array",
+          "label": "SmartContractFactory.Contract[]"
+        },
+        "t_mapping<t_array:dyn<t_struct<SmartContractFactory.Contract>>>": {
+          "id": "t_mapping<t_array:dyn<t_struct<SmartContractFactory.Contract>>>",
+          "valueType": "t_array:dyn<t_struct<SmartContractFactory.Contract>>",
+          "label": "mapping(key => SmartContractFactory.Contract[])",
+          "kind": "mapping"
+        }
+      },
+      "storage": [
+        {
+          "contract": "Initializable",
+          "path": "zos-lib\\contracts\\Initializable.sol",
+          "label": "initialized",
+          "astId": 4261,
+          "type": "t_bool",
+          "src": "757:24:5"
+        },
+        {
+          "contract": "Initializable",
+          "path": "zos-lib\\contracts\\Initializable.sol",
+          "label": "initializing",
+          "astId": 4263,
+          "type": "t_bool",
+          "src": "876:25:5"
+        },
+        {
+          "contract": "Initializable",
+          "path": "zos-lib\\contracts\\Initializable.sol",
+          "label": "______gap",
+          "astId": 4312,
+          "type": "t_array:50<t_uint256>",
+          "src": "1891:29:5"
+        },
+        {
+          "contract": "SmartContractFactory",
+          "path": "..\\..\\..\\..\\..\\..\\..\\C\\Users\\TAAWOBE1\\Documents\\private\\IPA-local\\source-code\\smart-contract-factory\\contracts\\SmartContractFactory.sol",
+          "label": "app",
+          "astId": 64,
+          "type": "t_address",
+          "src": "556:15:1"
+        },
+        {
+          "contract": "SmartContractFactory",
+          "path": "..\\..\\..\\..\\..\\..\\..\\C\\Users\\TAAWOBE1\\Documents\\private\\IPA-local\\source-code\\smart-contract-factory\\contracts\\SmartContractFactory.sol",
+          "label": "defaultPackageName",
+          "astId": 66,
+          "type": "t_string",
+          "src": "777:33:1"
+        },
+        {
+          "contract": "SmartContractFactory",
+          "path": "..\\..\\..\\..\\..\\..\\..\\C\\Users\\TAAWOBE1\\Documents\\private\\IPA-local\\source-code\\smart-contract-factory\\contracts\\SmartContractFactory.sol",
+          "label": "userContracts",
+          "astId": 71,
+          "type": "t_mapping<t_array:dyn<t_struct<SmartContractFactory.Contract>>>",
+          "src": "1021:52:1"
+        }
+      ],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": []
+      }
+    }
+  },
+  "solidityLibs": {},
+  "proxies": {
+    "smart-contract-factory/SmartContractFactory": [
+      {
+        "address": "0xf1dED5539971021C86200a9bbf40b4223F125718",
+        "version": "0.1.0",
+        "implementation": "0xc3410085C1FF9Cc7a5A07644744cfc9911E2680a"
+      }
+    ]
+  },
+  "zosversion": "2.2",
+  "frozen": false,
+  "app": {
+    "address": "0x15Da34943C5E21579E145Eb3bCAcfB2BBDA25E7E"
+  },
+  "package": {
+    "address": "0x5b981d82c47C743Cf9B5c4e36C3401424DF79542"
+  },
+  "provider": {
+    "address": "0x54814E6B6b70c0390269C4c9B17F21Cb7B3eaC22"
+  },
+  "version": "0.1.0",
+  "dependencies": {
+    "openzeppelin-eth": {
+      "package": "0xa44bb80b290de8a465d17b14269df53cf0b9bf4f",
+      "version": "2.0.2"
+    }
+  },
+  "proxyAdmin": {
+    "address": "0x4b0bd82Bb14152B5396F986A9ae868F9C7703130"
+  }
+}

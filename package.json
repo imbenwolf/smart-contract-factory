@@ -6,7 +6,7 @@
     "ethereum": "rm -f zos.dev-80085.json && yarn ganache-cli -i 80085",
     "serve": "vue-cli-service serve",
     "migrate:backend": "yarn lint:solidity && yarn truffle migrate",
-    "build:frontend": "yarn lint:solidity && truffle compile && zos-truffle-merge -n 3 zos.ropsten.json && vue-cli-service build",
+    "build:frontend": "yarn lint:solidity && rm -rf build && truffle compile && zos-truffle-merge -n 3 zos.ropsten.json && zos-truffle-merge -n 4 zos.rinkeby.json && vue-cli-service build",
     "deploy:frontend": "node deploy-frontend.js",
     "test:backend": "truffle test",
     "coverage:backend": "concurrently --names \"TestRPC,Coverage\" --kill-others \"testrpc-sc -p 8555\" \"solidity-coverage\" || true",
