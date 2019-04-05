@@ -30,3 +30,6 @@ zos.dev-*.json
 ## Coverage reports
 coverage
 coverage.json
+
+## Network config
+network-config.js
