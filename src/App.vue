@@ -142,7 +142,8 @@ export default {
     ...mapGetters([
       "isMetamaskInstalled",
       "ethereumAccountAddress",
-      "isNetworkSupported"
+      "isNetworkSupported",
+      "ethereumNetworkId"
     ]),
     year() {
       return new Date().getFullYear();
@@ -153,14 +154,23 @@ export default {
       this.selectedKeys = [to.name];
     },
     ethereumAccountAddress() {
-      this.fetchAllContracts();
+      if (this.isNetworkSupported) {
+        this.fetchAllContracts();
+      }
+    },
+    ethereumNetworkId() {
+      if (this.isNetworkSupported) {
+        this.fetchAllContracts();
+      }
     }
   },
   methods: {
     ...mapActions(["fetchAllContracts"])
   },
   async mounted() {
-    await this.fetchAllContracts();
+    if (this.isNetworkSupported) {
+      await this.fetchAllContracts();
+    }
   }
 };
 </script>

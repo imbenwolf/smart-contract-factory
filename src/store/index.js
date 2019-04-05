@@ -30,6 +30,7 @@ export default new Vuex.Store({
     isNetworkSupported: state =>
       factoryContract.hasNetwork(state.ethereumNetworkId),
     loadingAllContracts: state => state.loadingAllContracts,
+    ethereumNetworkId: state => state.ethereumNetworkId,
     loadingProxies: state => state.loadingProxies,
     proxies: state => state.proxies,
     supportedImplementations: state => state.supportedImplementations,
