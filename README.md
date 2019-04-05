@@ -19,7 +19,7 @@ yarn ethereum
 
 Additional options: https://github.com/trufflesuite/ganache-cli#using-ganache-cli
 
-### Compiles and hot-reloads for development
+### Compiles and hot-reloads application for development
 
 **Run development ethereum blockchain as described under [Runs development ethereum blockchain](#runs-development-ethereum-blockchain).**
 
@@ -59,12 +59,12 @@ yarn deploy:frontend <environment>
 
 Currently, two environments are available: ```testing``` and ```production```.
 
-### Lints vue files
+### Lints Vue files
 ```
 yarn lint:vue
 ```
 
-### Lints solidity files
+### Lints Solidity files
 ```
 yarn lint:solidity
 ```

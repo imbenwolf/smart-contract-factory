@@ -202,8 +202,7 @@ export default {
     // Code snippet from: https://sdx.swisscom.ch/
     .swisscom-logo-lifeform {
       background-size: 3600px 40px;
-      background: url(https://sdxcode.swisscom.ch/sdx/images/lifeform-spritesheet.png)
-        no-repeat 0 0;
+      background: url(./assets/swisscom-lifeform-spritesheet.png) no-repeat 0 0;
       width: 40px;
       height: 40px;
       -webkit-backface-visibility: hidden;
